@@ -54,28 +54,27 @@ if __name__ == "__main__":
 
     # Step 2: Proceed only if the authentication was successful.
     if gmail_service:
-        test_recipient_email = "dronekill1603@gmail.com"
+        test_recipient_email = "bhawna.sahay2004@gmail.com"
         test_recipient_name = "Srijan Sahay"
-        test_subject = f"Hello {test_recipient_name} (Final Script Test)"
-        test_body = (
-            f"Hi {test_recipient_name},\n\n"
-            "This email confirms that the final, corrected versions of the Python scripts are working together perfectly."
-        )
+        
 
         for i in range(1):
             test_subject = f"Hello {test_recipient_name} (Final Script Test) {i}"
             test_body = (
-                f"Hi {test_recipient_name},\n\n"
-                "This email confirms that the final, corrected versions of the Python scripts are working together perfectly."
+                f"Hi {test_recipient_name},<br><br>"
+                "<a href='https://ignite.srijansahay05.in'>Ignite Website</a> :) is up and running"
             )
             print(f"\n=== Sending Test Email {i}===")
-            send_email(
-                service=gmail_service,
-                recipient_email=test_recipient_email,
-                recipient_name=test_recipient_name,
-                subject=test_subject,
-                body_text=test_body,
+            message = MIMEText(test_body, "html")
+            message["to"] = f"{test_recipient_name} <{test_recipient_email}>"
+            message["from"] = f"PIEDS-ST Mail Merge <{gmail_service.users().getProfile(userId='me').execute()['emailAddress']}>"
+            message["subject"] = test_subject
+            encoded_message = base64.urlsafe_b64encode(message.as_bytes()).decode()
+            create_message = {"raw": encoded_message}
+            send_message = (
+                gmail_service.users().messages().send(userId="me", body=create_message).execute()
             )
+            print(f"Email sent successfully to {test_recipient_email}. Message ID: {send_message['id']}")
         print("--------------------------\n")
     else:
         print("Could not create Gmail service. Aborting email send.")
