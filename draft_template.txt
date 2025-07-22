@@ -1,0 +1,52 @@
+subject: Join IGNITE 2025 <> BITS Pilani’s Startup Sprint
+
+body:
+<p style="font-size:12pt;font-family:'Times New Roman',serif;color:#000;background-color:transparent;margin:0 0 18px 0;">Dear {poc_name},</p>
+
+<p style="font-size:12pt;font-family:'Times New Roman',serif;color:#000;background-color:transparent;margin:0 0 18px 0;">
+I’m Harshit from <b>PIEDS</b>, the startup incubator at <b>BITS Pilani</b>. I’m reaching out to invite <b>{company}</b> to partner with us for IGNITE 2025 - our flagship 6-day startup innovation sprint happening this September.
+</p>
+
+<p style="font-size:12pt;font-family:'Times New Roman',serif;color:#000;background-color:transparent;margin:0 0 18px 0;">
+Inspired by Y Combinator’s Startup School, IGNITE is designed to help ambitious innovators go from <b>raw idea to MVP in under a week</b> through intensive building, mentorship, and investor feedback.
+</p>
+
+<p style="font-size:12pt;font-family:'Times New Roman',serif;color:#000;background-color:transparent;margin:0 0 10px 0;">The highlights of IGNITE 2024:</p>
+<ul style="font-size:12pt;font-family:'Times New Roman',serif;color:#000;background-color:transparent;margin:0 0 18px 0;padding-left:0;list-style-type:none;">
+    <li style="margin-bottom:2px;"><b>– 1,000+ applications</b> | 15+ startups selected</li>
+    <li style="margin-bottom:2px;"><b>– 100+ investors present | $200K+</b> in tech credits awarded</li>
+    <li style="margin-bottom:2px;"><b>– Alchemyst AI</b> raised <b>$300K</b> post-event</li>
+    <li style="margin-bottom:2px;">– Ambiator was on boarded by <b>Sustainability Mafia</b></li>
+    <li style="margin-bottom:2px;">– Coverage in <b>Indian Express, Inc42</b> | <b>30K+ LinkedIn impressions</b></li>
+</ul>
+
+<p style="font-size:12pt;font-family:'Times New Roman',serif;color:#000;background-color:transparent;margin:0 0 18px 0;">
+PIEDS has incubated ventures like <b>Nawgati, Jarsh safety(all featured on Shark tank), Alt Carbon</b> (supported by Shastra VC), and others - with several securing follow-on funding, grants, and cohort selections across India and abroad.
+</p>
+
+<p style="font-size:12pt;font-family:'Times New Roman',serif;color:#000;background-color:transparent;margin:0 0 18px 0;">
+Additionally, PIEDS is eligible to receive CSR (Corporate Social Responsibility) funds, offering <b>{company}</b> a meaningful opportunity to collaborate with one of India’s leading student innovation hubs; amplifying stories of young changemakers, supporting entrepreneurship, and advancing your CSR goals in education and innovation.
+</p>
+
+<p style="font-size:12pt;font-family:'Times New Roman',serif;color:#000;background-color:transparent;margin:0 0 18px 0;">
+Please find our brochure and aftermovie here: <a href="https://c86b6af9.streaklinks.com/Cgv3Kf7UVNY8LOQ9SAukDmdv/https%3A%2F%2Fdrive.google.com%2Ffile%2Fd%2F1ecWpmSb7080g9Rwe7dMOhbqiyT6SD4Mh%2Fview%3Fusp%3Ddrive_link" style="color:#1976d2; text-decoration: underline; font-weight: bold;">Brochure Link</a> | <a href="https://c86b6af9.streaklinks.com/Cgv3Kf37O9cdeidVXgfG_K6T/https%3A%2F%2Fdrive.google.com%2Ffile%2Fd%2F1enwXPsbPNg1xjLolb6_rbj4AVMH1-kA0%2Fview%3Fusp%3Ddrive_link" style="color:#1976d2; text-decoration: underline; font-weight: bold;">Aftermovie Link</a>
+</p>
+
+<p style="font-size:12pt;font-family:'Times New Roman',serif;color:#000;background-color:transparent;margin:0 0 18px 0;font-weight:bold;">
+Could we schedule a call to discuss potential collaboration? Looking forward to your response.
+</p>
+
+<p style="font-size:12pt;font-family:'Times New Roman',serif;color:#888;background-color:transparent;margin:0 0 2px 0;font-style:italic;font-weight:bold;">Best Regards,</p>
+<p style="font-size:12pt;font-family:'Times New Roman',serif;color:#000;background-color:transparent;margin:0 0 2px 0;font-weight:bold;">Harshit Saini</p>
+<p style="font-size:12pt;font-family:'Times New Roman',serif;color:#000;background-color:transparent;margin:0 0 2px 0;font-weight:bold;">Partnerships Associate</p>
+<p style="font-size:12pt;font-family:'Times New Roman',serif;color:#000;background-color:transparent;margin:0 0 2px 0;">PIEDS Student Team</p>
+<p style="font-size:12pt;font-family:'Times New Roman',serif;color:#000;background-color:transparent;margin:0 0 2px 0;">E-Mail: <a href="mailto:harshit.saini@example.com" style="color:#1976d2; text-decoration: underline; font-weight: bold;">Personal E-mail</a> | <a href="mailto:f20210000@pilani.bits-pilani.ac.in" style="color:#1976d2; text-decoration: underline; font-weight: bold;">University E-mail</a></p>
+<p style="font-size:12pt;font-family:'Times New Roman',serif;color:#000;background-color:transparent;margin:0 0 2px 0;">LinkedIn Profile: <a href="https://www.linkedin.com/in/harshit-saini/" style="color:#1976d2; text-decoration: underline; font-weight: bold;">Harshit Saini</a></p>
+<p style="font-size:12pt;font-family:'Times New Roman',serif;color:#222;background-color:transparent;margin:0 0 2px 0;font-weight:bold;">Phone: +91 7425014966</p>
+
+<div style="margin:18px 0 10px 0;">
+<span style="font-size:12pt;font-family:&quot;Times New Roman&quot;,serif;color:rgb(241,194,50);background-color:transparent;font-weight:700;font-variant-numeric:normal;font-variant-east-asian:normal;font-variant-alternates:normal;vertical-align:baseline">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</span><span style="font-size:12pt;font-family:&quot;Times New Roman&quot;,serif;color:rgb(253,175,23);background-color:transparent;font-weight:700;font-variant-numeric:normal;font-variant-east-asian:normal;font-variant-alternates:normal;vertical-align:baseline">▄▄</span><span style="font-size:12pt;font-family:&quot;Times New Roman&quot;,serif;color:rgb(117,195,233);background-color:transparent;font-weight:700;font-variant-numeric:normal;font-variant-east-asian:normal;font-variant-alternates:normal;vertical-align:baseline">▄▄▄▄▄▄▄▄▄▄▄▄<wbr>▄▄▄▄▄▄▄▄</span><span style="font-size:12pt;font-family:&quot;Times New Roman&quot;,serif;color:rgb(237,27,36);background-color:transparent;font-weight:700;font-variant-numeric:normal;font-variant-east-asian:normal;font-variant-alternates:normal;vertical-align:baseline">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</span>
+</div>
+
+<p style="font-size:12pt;font-family:'Times New Roman',serif;color:#222;background-color:transparent;font-weight:bold;margin:0;">Birla Institute of Technology &amp; Science, Pilani</p>
+<p style="font-size:12pt;font-family:'Times New Roman',serif;color:#222;background-color:transparent;margin:0;">Pilani Campus, Rajasthan - 333 031, India</p> 

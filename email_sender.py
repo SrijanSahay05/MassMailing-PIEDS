@@ -5,7 +5,7 @@ from googleapiclient.errors import HttpError
 from google_authentication import get_gmail_service
 
 
-def send_email(service, recipient_email, recipient_name, subject, body_text):
+def send_email(service, recipient_email, recipient_name, subject, body_text, is_html=False):
     """
     Creates and sends an email to a specific recipient.
 
@@ -14,7 +14,8 @@ def send_email(service, recipient_email, recipient_name, subject, body_text):
         recipient_email: The email address of the recipient.
         recipient_name: The name of the recipient (for personalization).
         subject: The subject line of the email.
-        body_text: The plain text content of the email body.
+        body_text: The content of the email body (plain text or HTML).
+        is_html: If True, send as HTML. Otherwise, send as plain text.
 
     Returns:
         The sent message object if successful, otherwise None.
@@ -23,7 +24,7 @@ def send_email(service, recipient_email, recipient_name, subject, body_text):
         user_profile = service.users().getProfile(userId="me").execute()
         sender_email = user_profile["emailAddress"]
 
-        message = MIMEText(body_text)
+        message = MIMEText(body_text, "html" if is_html else "plain")
         message["to"] = f"{recipient_name} <{recipient_email}>"
         message["from"] = f"PIEDS-ST Mail Merge <{sender_email}>"
         message["subject"] = subject
@@ -54,7 +55,7 @@ if __name__ == "__main__":
 
     # Step 2: Proceed only if the authentication was successful.
     if gmail_service:
-        test_recipient_email = "bhawna.sahay2004@gmail.com"
+        test_recipient_email = "srijan05sahay@gmail.com"
         test_recipient_name = "Srijan Sahay"
         
 
@@ -67,7 +68,7 @@ if __name__ == "__main__":
             print(f"\n=== Sending Test Email {i}===")
             message = MIMEText(test_body, "html")
             message["to"] = f"{test_recipient_name} <{test_recipient_email}>"
-            message["from"] = f"PIEDS-ST Mail Merge <{gmail_service.users().getProfile(userId='me').execute()['emailAddress']}>"
+            message["from"] = f"P <{gmail_service.users().getProfile(userId='me').execute()['emailAddress']}>"
             message["subject"] = test_subject
             encoded_message = base64.urlsafe_b64encode(message.as_bytes()).decode()
             create_message = {"raw": encoded_message}
