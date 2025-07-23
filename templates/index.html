@@ -1,0 +1,948 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PIEDS Mass Mailing System</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: white;
+            min-height: 100vh;
+        }
+        
+        .navbar {
+            background: rgba(255, 255, 255, 0.95) !important;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .main-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            backdrop-filter: blur(10px);
+        }
+        
+        .upload-area {
+            border: 2px dashed #007bff;
+            border-radius: 10px;
+            padding: 40px;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .upload-area:hover, .upload-area.dragover {
+            border-color: #0056b3;
+            background-color: rgba(0, 123, 255, 0.05);
+        }
+        
+        .step-content {
+            display: none;
+        }
+        
+        .step-content.active {
+            display: block;
+        }
+        
+        .progress-step {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #e9ecef;
+            color: #6c757d;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin: 0 auto 10px;
+        }
+        
+        .progress-step.active {
+            background-color: #007bff;
+            color: white;
+        }
+        
+        .progress-step.completed {
+            background-color: #28a745;
+            color: white;
+        }
+        
+        .preview-card {
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .preview-card .card-header {
+            background-color: #f8f9fa;
+            border-bottom: 1px solid #dee2e6;
+        }
+        
+        .email-body-preview {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+        }
+        
+        .email-body-preview img {
+            max-width: 100%;
+            height: auto;
+        }
+        
+        .email-body-preview a {
+            color: #007bff;
+            text-decoration: underline;
+        }
+        
+        .email-body-preview table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+        
+        .email-body-preview table td,
+        .email-body-preview table th {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+        
+        .pagination .page-link {
+            color: #007bff;
+        }
+        
+        .pagination .page-item.active .page-link {
+            background-color: #007bff;
+            border-color: #007bff;
+        }
+        
+        .loading {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 9999;
+        }
+        
+        .loading-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            color: white;
+        }
+        
+        .spinner-border {
+            width: 3rem;
+            height: 3rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-light">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="/">
+                <i class="fas fa-envelope-open-text me-2"></i>
+                PIEDS Mass Mailing System
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/home">
+                            <i class="fas fa-home me-1"></i>Home
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/history">
+                            <i class="fas fa-history me-1"></i>History
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Loading Overlay -->
+    <div class="loading" id="loading">
+        <div class="loading-content">
+            <div class="spinner-border" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+            <p class="mt-3">Processing...</p>
+        </div>
+    </div>
+
+    <div class="container py-5">
+        <div class="main-container p-4">
+            <div class="text-center mb-4">
+                <h1 class="display-4 fw-bold text-primary">
+                    <i class="fas fa-envelope-open-text me-3"></i>
+                    PIEDS Mass Mailing System
+                </h1>
+                <p class="lead text-muted">Send personalized emails to your contacts with ease</p>
+            </div>
+
+            <!-- Progress Steps -->
+            <div class="row mb-4">
+                <div class="col-md-6 text-center">
+                    <div class="progress-step active" id="step1-indicator">1</div>
+                    <small>Upload & Configure</small>
+                </div>
+                <div class="col-md-6 text-center">
+                    <div class="progress-step" id="step2-indicator">2</div>
+                    <small>Preview & Send</small>
+                </div>
+            </div>
+
+            <!-- Step 1: Upload Excel File -->
+            <div id="step1" class="step-content active">
+                <h4>📁 Step 1: Upload & Configure</h4>
+                <p class="text-muted">Upload your Excel file and configure email settings</p>
+                
+                <div class="upload-area" id="uploadArea">
+                    <i class="fas fa-file-excel fa-3x text-primary mb-3"></i>
+                    <h5>Drag & Drop your Excel file here</h5>
+                    <p class="text-muted">or</p>
+                    <input type="file" id="fileInput" accept=".xlsx,.xls,.csv" style="display: none;">
+                    <button class="btn btn-primary" onclick="document.getElementById('fileInput').click()">
+                        <i class="fas fa-upload me-2"></i>Choose File
+                    </button>
+                </div>
+                
+                <!-- Configuration Section (shown after file upload) -->
+                <div id="configurationSection" class="mt-4" style="display: none;">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="mb-0">📧 Email Configuration</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="campaignName" class="form-label">Campaign Name (Optional)</label>
+                                        <input type="text" class="form-control" id="campaignName" placeholder="Enter campaign name">
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <label for="emailCol" class="form-label">Email Address Column</label>
+                                        <select class="form-select" id="emailCol">
+                                            <option value="email address">email address</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <label for="pocCol" class="form-label">POC Name Column</label>
+                                        <select class="form-select" id="pocCol">
+                                            <option value="poc name">poc name</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="designationCol" class="form-label">Designation Column</label>
+                                        <select class="form-select" id="designationCol">
+                                            <option value="designation">designation</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <label for="companyCol" class="form-label">Company Name Column</label>
+                                        <select class="form-select" id="companyCol">
+                                            <option value="company name">company name</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <label for="templateSelect" class="form-label">Email Template</label>
+                                        <select class="form-select" id="templateSelect">
+                                            <option value="draft_template.txt">draft_template.txt</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="text-center mt-3">
+                                <button class="btn btn-success btn-lg me-2" onclick="previewEmails()">
+                                    <i class="fas fa-eye me-2"></i>Preview & Send Emails
+                                </button>
+                                <button class="btn btn-outline-secondary" onclick="startNewCampaign()">
+                                    <i class="fas fa-plus me-2"></i>New Campaign
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="dataPreview" class="mt-4" style="display: none;">
+                    <h5>📊 Data Preview</h5>
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead id="dataPreviewHeader"></thead>
+                            <tbody id="dataPreviewBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 2: Email Preview -->
+            <div id="step2" class="step-content">
+                <h4>📧 Step 2: Preview & Send</h4>
+                <p class="text-muted">Review your personalized emails before sending</p>
+                
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <button class="btn btn-secondary" onclick="showStep(1)">
+                            <i class="fas fa-arrow-left"></i> Back to Configuration
+                        </button>
+                    </div>
+                    <div class="col-md-6 text-end">
+                        <button class="btn btn-success me-2" onclick="sendEmails()">
+                            <i class="fas fa-paper-plane"></i> Send All Emails
+                        </button>
+                        <button class="btn btn-outline-primary" onclick="sendAnotherCampaign()">
+                            <i class="fas fa-redo"></i> Send Another
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Pagination Controls -->
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <div class="d-flex align-items-center">
+                            <label class="me-2">Emails per page:</label>
+                            <select id="perPageSelect" class="form-select form-select-sm" style="width: auto;" onchange="changePerPage()">
+                                <option value="5">5</option>
+                                <option value="10" selected>10</option>
+                                <option value="20">20</option>
+                                <option value="50">50</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div id="paginationInfo" class="text-end text-muted"></div>
+                    </div>
+                </div>
+                
+                <div id="emailPreview"></div>
+                
+                <!-- Pagination Navigation -->
+                <div class="row mt-3">
+                    <div class="col-12">
+                        <nav aria-label="Email preview pagination">
+                            <ul id="paginationControls" class="pagination justify-content-center">
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+
+                <!-- Results Modal -->
+                <div class="modal fade" id="resultsModal" tabindex="-1">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Email Sending Results</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+                            <div class="modal-body" id="resultsContent"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        let currentFile = null;
+        let currentData = null;
+        let currentEmails = []; // To store all emails for pagination
+        let currentPage = 1;
+        let emailsPerPage = 10;
+
+        // File upload handling
+        document.getElementById('fileInput').addEventListener('change', handleFileSelect);
+        
+        const uploadArea = document.getElementById('uploadArea');
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.classList.add('dragover');
+        });
+        
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.classList.remove('dragover');
+        });
+        
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove('dragover');
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                handleFile(files[0]);
+            }
+        });
+
+        function handleFileSelect(e) {
+            const file = e.target.files[0];
+            if (file) {
+                handleFile(file);
+            }
+        }
+
+        function handleFile(file) {
+            if (!file) {
+                alert('No file selected');
+                return;
+            }
+            
+            const formData = new FormData();
+            formData.append('excel_file', file);
+            
+            showLoading();
+            
+            fetch('/upload', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                hideLoading();
+                if (data.success) {
+                    currentFile = data.filename;
+                    currentData = data;
+                    populateColumnSelects(data.columns);
+                    populateDataPreview(data.preview);
+                    
+                    // Show configuration section
+                    document.getElementById('configurationSection').style.display = 'block';
+                    
+                    // Scroll to configuration section
+                    document.getElementById('configurationSection').scrollIntoView({ 
+                        behavior: 'smooth' 
+                    });
+                } else {
+                    alert('Error: ' + data.error);
+                }
+            })
+            .catch(error => {
+                hideLoading();
+                console.error('Upload error:', error);
+                alert('Error uploading file: ' + error);
+            });
+        }
+
+        function populateColumnSelects(columns) {
+            if (!columns || !Array.isArray(columns)) {
+                console.error('Invalid columns data:', columns);
+                return;
+            }
+            
+            const selects = ['emailCol', 'pocCol', 'designationCol', 'companyCol'];
+            selects.forEach(selectId => {
+                const select = document.getElementById(selectId);
+                if (!select) {
+                    console.error(`Select element not found: ${selectId}`);
+                    return;
+                }
+                
+                select.innerHTML = '';
+                columns.forEach(col => {
+                    const option = document.createElement('option');
+                    option.value = col;
+                    option.textContent = col;
+                    select.appendChild(option);
+                });
+            });
+        }
+
+        function populateDataPreview(data) {
+            const tbody = document.getElementById('dataPreviewBody');
+            const thead = document.getElementById('dataPreviewHeader');
+            const dataPreview = document.getElementById('dataPreview');
+            
+            if (!tbody || !thead || !dataPreview) {
+                console.error('Data preview elements not found');
+                return;
+            }
+            
+            // Clear existing content
+            tbody.innerHTML = '';
+            thead.innerHTML = '';
+            
+            if (data && data.length > 0) {
+                // Create header
+                const headerRow = document.createElement('tr');
+                Object.keys(data[0]).forEach(key => {
+                    const th = document.createElement('th');
+                    th.textContent = key;
+                    headerRow.appendChild(th);
+                });
+                thead.appendChild(headerRow);
+                
+                // Create body rows
+                data.forEach(row => {
+                    const tr = document.createElement('tr');
+                    Object.values(row).forEach(value => {
+                        const td = document.createElement('td');
+                        td.textContent = value || '';
+                        tr.appendChild(td);
+                    });
+                    tbody.appendChild(tr);
+                });
+                
+                // Show the preview
+                dataPreview.style.display = 'block';
+            }
+        }
+
+        function previewEmails() {
+            console.log('previewEmails called');
+            
+            if (!currentFile) {
+                alert('Please upload a file first');
+                return;
+            }
+            
+            const emailCol = document.getElementById('emailCol');
+            const pocCol = document.getElementById('pocCol');
+            const designationCol = document.getElementById('designationCol');
+            const companyCol = document.getElementById('companyCol');
+            const templateSelect = document.getElementById('templateSelect');
+            
+            if (!emailCol || !pocCol || !designationCol || !companyCol || !templateSelect) {
+                alert('Configuration elements not found. Please refresh the page.');
+                return;
+            }
+            
+            const data = {
+                filename: currentFile,
+                email_col: emailCol.value,
+                poc_col: pocCol.value,
+                designation_col: designationCol.value,
+                company_col: companyCol.value,
+                template_path: templateSelect.value,
+                page: currentPage,
+                per_page: emailsPerPage
+            };
+            
+            console.log('Sending preview request with data:', data);
+            showLoading();
+            
+            fetch('/preview', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Preview response received:', data);
+                hideLoading();
+                if (data.success) {
+                    currentEmails = data.preview_emails;
+                    currentPage = data.pagination.current_page;
+                    emailsPerPage = data.pagination.per_page;
+                    console.log('About to display email preview with:', data.preview_emails.length, 'emails');
+                    displayEmailPreview(data.preview_emails, data.pagination);
+                    console.log('About to show step 2');
+                    showStep(2);
+                } else {
+                    alert('Error: ' + data.error);
+                }
+            })
+            .catch(error => {
+                hideLoading();
+                console.error('Preview error:', error);
+                alert('Error previewing emails: ' + error);
+            });
+        }
+
+        function displayEmailPreview(emails, pagination = null) {
+            console.log('displayEmailPreview called with', emails?.length, 'emails');
+            
+            const container = document.getElementById('emailPreview');
+            if (!container) {
+                console.error('Email preview container not found');
+                return;
+            }
+            
+            console.log('Found email preview container, clearing content');
+            container.innerHTML = '';
+            
+            if (!emails || emails.length === 0) {
+                console.log('No emails to display, showing info message');
+                container.innerHTML = '<div class="alert alert-info">No emails to preview</div>';
+                return;
+            }
+            
+            console.log('Creating email preview cards for', emails.length, 'emails');
+            emails.forEach((email, index) => {
+                const card = document.createElement('div');
+                card.className = 'card mb-3 preview-card';
+                card.innerHTML = `
+                    <div class="card-header">
+                        <div class="row align-items-center">
+                            <div class="col-md-8">
+                                <h6 class="mb-0"><strong>To:</strong> ${email.to || 'N/A'}</h6>
+                                <small class="text-muted">Row ${email.row_number || index + 1}</small>
+                            </div>
+                            <div class="col-md-4 text-end">
+                                <span class="badge bg-primary">Email ${pagination ? (pagination.start_idx + index) : (index + 1)}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="row mb-2">
+                            <div class="col-md-6">
+                                <strong>Subject:</strong> ${email.subject || 'N/A'}
+                            </div>
+                            <div class="col-md-6">
+                                <strong>POC:</strong> ${email.poc_name || 'N/A'} (${email.designation || 'N/A'} at ${email.company || 'N/A'})
+                            </div>
+                        </div>
+                        <div class="mt-3">
+                            <strong>Email Body:</strong>
+                            <div class="border rounded p-3 bg-light mt-2" style="max-height: 400px; overflow-y: auto;">
+                                <div class="email-body-preview">
+                                    ${email.body || 'No email body available'}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+            
+            console.log('Email preview cards created, updating pagination');
+            if (pagination) {
+                updatePaginationInfo(pagination);
+                updatePaginationControls(pagination);
+            }
+            console.log('Email preview display completed');
+        }
+
+        function updatePaginationInfo(pagination) {
+            const info = document.getElementById('paginationInfo');
+            if (!info || !pagination) {
+                return;
+            }
+            info.textContent = `Showing ${pagination.start_idx} to ${pagination.end_idx} of ${pagination.total_emails} emails (Page ${pagination.current_page} of ${pagination.total_pages})`;
+        }
+
+        function updatePaginationControls(pagination) {
+            const paginationControls = document.getElementById('paginationControls');
+            if (!paginationControls || !pagination) {
+                return;
+            }
+            
+            paginationControls.innerHTML = '';
+
+            if (pagination.total_pages > 1) {
+                // Previous button
+                if (pagination.current_page > 1) {
+                    const prevBtn = document.createElement('li');
+                    prevBtn.className = 'page-item';
+                    prevBtn.innerHTML = `
+                        <a class="page-link" href="#" onclick="loadPage(${pagination.current_page - 1})">Previous</a>
+                    `;
+                    paginationControls.appendChild(prevBtn);
+                }
+
+                // Page numbers
+                const startPage = Math.max(1, pagination.current_page - 2);
+                const endPage = Math.min(pagination.total_pages, pagination.current_page + 2);
+
+                for (let i = startPage; i <= endPage; i++) {
+                    const pageItem = document.createElement('li');
+                    pageItem.className = `page-item ${i === pagination.current_page ? 'active' : ''}`;
+                    pageItem.innerHTML = `
+                        <a class="page-link" href="#" onclick="loadPage(${i})">${i}</a>
+                    `;
+                    paginationControls.appendChild(pageItem);
+                }
+
+                // Next button
+                if (pagination.current_page < pagination.total_pages) {
+                    const nextBtn = document.createElement('li');
+                    nextBtn.className = 'page-item';
+                    nextBtn.innerHTML = `
+                        <a class="page-link" href="#" onclick="loadPage(${pagination.current_page + 1})">Next</a>
+                    `;
+                    paginationControls.appendChild(nextBtn);
+                }
+            }
+        }
+
+        function loadPage(page) {
+            currentPage = page;
+            previewEmails();
+        }
+
+        function changePerPage() {
+            emailsPerPage = parseInt(document.getElementById('perPageSelect').value);
+            currentPage = 1; // Reset to first page
+            previewEmails();
+        }
+
+        function sendEmails() {
+            if (!confirm(`Are you sure you want to send ${currentData.total_rows} emails?`)) {
+                return;
+            }
+            
+            const data = {
+                filename: currentFile,
+                email_col: document.getElementById('emailCol').value,
+                poc_col: document.getElementById('pocCol').value,
+                designation_col: document.getElementById('designationCol').value,
+                company_col: document.getElementById('companyCol').value,
+                template_path: document.getElementById('templateSelect').value,
+                campaign_name: document.getElementById('campaignName').value || `Campaign ${new Date().toLocaleString()}`
+            };
+            
+            showLoading();
+            
+            fetch('/send', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(data => {
+                hideLoading();
+                if (data.success) {
+                    showResults(data);
+                } else {
+                    alert('Error: ' + data.error);
+                }
+            })
+            .catch(error => {
+                hideLoading();
+                alert('Error sending emails: ' + error);
+            });
+        }
+
+        function sendAnotherCampaign() {
+            // Go back to step 1 with current configuration preserved
+            showStep(1);
+            
+            // Keep the configuration section visible if file was uploaded
+            if (currentFile) {
+                document.getElementById('configurationSection').style.display = 'block';
+                document.getElementById('dataPreview').style.display = 'block';
+                
+                // Scroll to top of page for better UX
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+
+        function showResults(data) {
+            const modal = document.getElementById('resultsModal');
+            const content = document.getElementById('resultsContent');
+            
+            const successRate = data.summary.total > 0 ? 
+                Math.round((data.summary.success / data.summary.total) * 100) : 0;
+            
+            content.innerHTML = `
+                <div class="text-center mb-4">
+                    <i class="fas fa-check-circle fa-3x text-success mb-3"></i>
+                    <h4 class="text-success">Campaign Completed Successfully!</h4>
+                    <p class="text-muted">Campaign: ${data.campaign_name}</p>
+                </div>
+                
+                <div class="row mb-4">
+                    <div class="col-md-3 text-center">
+                        <div class="card bg-primary text-white">
+                            <div class="card-body">
+                                <h3>${data.summary.total}</h3>
+                                <small>Total Emails</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 text-center">
+                        <div class="card bg-success text-white">
+                            <div class="card-body">
+                                <h3>${data.summary.success}</h3>
+                                <small>Successfully Sent</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 text-center">
+                        <div class="card bg-danger text-white">
+                            <div class="card-body">
+                                <h3>${data.summary.errors}</h3>
+                                <small>Failed</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 text-center">
+                        <div class="card bg-warning text-white">
+                            <div class="card-body">
+                                <h3>${data.summary.skipped}</h3>
+                                <small>Skipped</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="text-center mb-3">
+                    <h5>Success Rate: ${successRate}%</h5>
+                </div>
+                
+                <div class="text-center">
+                    <button class="btn btn-primary me-2" onclick="window.location.href='/history'">
+                        <i class="fas fa-history me-2"></i>View Campaign History
+                    </button>
+                    <button class="btn btn-success me-2" onclick="goToHome()">
+                        <i class="fas fa-redo me-2"></i>Send Another Campaign
+                    </button>
+                    <button class="btn btn-secondary" onclick="startNewCampaign()">
+                        <i class="fas fa-plus me-2"></i>Start New Campaign
+                    </button>
+                </div>
+            `;
+            
+            new bootstrap.Modal(modal).show();
+        }
+
+        function goToHome() {
+            // Close the modal
+            const modal = bootstrap.Modal.getInstance(document.getElementById('resultsModal'));
+            modal.hide();
+            
+            // Go back to step 1 but preserve the uploaded file and configuration
+            showStep(1);
+            
+            // Keep the configuration section visible if file was uploaded
+            if (currentFile) {
+                document.getElementById('configurationSection').style.display = 'block';
+                document.getElementById('dataPreview').style.display = 'block';
+                
+                // Scroll to top of page for better UX
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+
+        function resetForm() {
+            // Reset file input
+            document.getElementById('fileInput').value = '';
+            
+            // Reset campaign name
+            document.getElementById('campaignName').value = '';
+            
+            // Reset current data
+            currentFile = null;
+            currentData = null;
+            currentEmails = [];
+            currentPage = 1;
+            emailsPerPage = 10;
+            
+            // Hide configuration section and data preview
+            document.getElementById('configurationSection').style.display = 'none';
+            document.getElementById('dataPreview').style.display = 'none';
+            
+            // Reset progress indicators
+            document.querySelectorAll('.progress-step').forEach(el => {
+                if (el) el.classList.remove('active', 'completed');
+            });
+            document.getElementById('step1-indicator').classList.add('active');
+        }
+
+        function startNewCampaign() {
+            // Complete reset for starting a new campaign
+            resetForm();
+            
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function showStep(step) {
+            console.log('showStep called with step:', step);
+            
+            // Hide all steps
+            document.querySelectorAll('.step-content').forEach(el => {
+                if (el) {
+                    console.log('Hiding step element:', el.id);
+                    el.classList.remove('active');
+                }
+            });
+            
+            // Reset all progress indicators
+            document.querySelectorAll('.progress-step').forEach(el => {
+                if (el) {
+                    el.classList.remove('active', 'completed');
+                }
+            });
+            
+            // Show current step
+            const currentStepElement = document.getElementById(`step${step}`);
+            const currentIndicator = document.getElementById(`step${step}-indicator`);
+            
+            console.log('Current step element:', currentStepElement?.id);
+            console.log('Current indicator element:', currentIndicator?.id);
+            
+            if (currentStepElement) {
+                currentStepElement.classList.add('active');
+                console.log('Added active class to step element');
+            } else {
+                console.error('Step element not found for step:', step);
+            }
+            
+            if (currentIndicator) {
+                currentIndicator.classList.add('active');
+                console.log('Added active class to indicator');
+            } else {
+                console.error('Indicator element not found for step:', step);
+            }
+
+            // Mark previous steps as completed
+            for (let i = 1; i < step; i++) {
+                const prevIndicator = document.getElementById(`step${i}-indicator`);
+                if (prevIndicator) {
+                    prevIndicator.classList.add('completed');
+                    console.log('Marked step', i, 'as completed');
+                }
+            }
+            
+            console.log('showStep completed for step:', step);
+        }
+
+        function showLoading() {
+            document.getElementById('loading').style.display = 'block';
+        }
+
+        function hideLoading() {
+            document.getElementById('loading').style.display = 'none';
+        }
+
+        // Load templates on page load
+        window.addEventListener('load', () => {
+            fetch('/templates')
+                .then(response => response.json())
+                .then(templates => {
+                    const select = document.getElementById('templateSelect');
+                    select.innerHTML = '';
+                    templates.forEach(template => {
+                        const option = document.createElement('option');
+                        option.value = template;
+                        option.textContent = template;
+                        select.appendChild(option);
+                    });
+                });
+        });
+    </script>
+</body>
+</html> 

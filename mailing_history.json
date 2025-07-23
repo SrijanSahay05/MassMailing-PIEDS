@@ -1,0 +1,60 @@
+[
+  {
+    "id": 1,
+    "timestamp": "2025-07-23T10:10:24.039043",
+    "campaign_name": "Campaign 23/07/2025, 10:10:13",
+    "filename": "template.xlsx",
+    "template_used": "draft_template.txt",
+    "total_emails": 2,
+    "success_count": 2,
+    "error_count": 0,
+    "skipped_count": 0,
+    "results": [
+      {
+        "email": "srijan.sahay2k5@gmail.com",
+        "status": "success",
+        "message": "Email sent successfully"
+      },
+      {
+        "email": "srijan05sahay@gmail.com",
+        "status": "success",
+        "message": "Email sent successfully"
+      }
+    ],
+    "column_mapping": {
+      "email_col": "email address",
+      "poc_col": "poc name",
+      "designation_col": "designation",
+      "company_col": "company name"
+    }
+  },
+  {
+    "id": 2,
+    "timestamp": "2025-07-23T10:13:23.455525",
+    "campaign_name": "Campaign 23/07/2025, 10:13:13",
+    "filename": "template.xlsx",
+    "template_used": "draft_template.txt",
+    "total_emails": 2,
+    "success_count": 2,
+    "error_count": 0,
+    "skipped_count": 0,
+    "results": [
+      {
+        "email": "srijan.sahay2k5@gmail.com",
+        "status": "success",
+        "message": "Email sent successfully"
+      },
+      {
+        "email": "srijan05sahay@gmail.com",
+        "status": "success",
+        "message": "Email sent successfully"
+      }
+    ],
+    "column_mapping": {
+      "email_col": "email address",
+      "poc_col": "poc name",
+      "designation_col": "designation",
+      "company_col": "company name"
+    }
+  }
+]
