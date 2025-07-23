@@ -1,7 +1,7 @@
 #!/bin/bash
 
 DOMAIN="crm.srijansahay05.in"
-EMAIL="your-email@example.com"  # <-- Change to your real email
+EMAIL="srijansahay05@gmail.com"  # <-- Change to your real email
 
 set -e
 
