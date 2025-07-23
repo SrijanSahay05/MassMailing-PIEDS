@@ -1,0 +1,8 @@
+Flask==2.3.3
+requests==2.31.0
+pandas==2.2.2
+openpyxl==3.1.2
+# For Google authentication and email sending
+google-auth==2.29.0
+google-auth-oauthlib==1.2.0
+google-api-python-client==2.126.0

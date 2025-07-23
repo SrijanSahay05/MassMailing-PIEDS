@@ -1,0 +1,495 @@
+{% extends "base.html" %}
+{% block title %}Home - PIEDS Mass Mailing System{% endblock %}
+{% block content %}
+<div class="main-card">
+    <div class="text-center mb-4">
+        <h1 class="display-4 fw-bold text-primary">
+            <i class="fas fa-envelope-open-text me-3"></i>
+            PIEDS Mass Mailing System
+        </h1>
+        <p class="lead text-muted">Send personalized emails to your contacts with ease</p>
+    </div>
+    <!-- Step 1: Upload Excel File -->
+    <div id="step1" class="step-content active">
+        <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 50vh;">
+            <div class="card p-4 shadow-sm" style="min-width: 350px; max-width: 400px;">
+                <div class="text-center mb-3">
+                    <i class="fas fa-envelope-open-text fa-3x text-primary mb-2"></i>
+                    <h2 class="fw-bold text-primary mb-1">PIEDS Mass Mailing System</h2>
+                    <p class="text-muted mb-0">Send personalized emails to your contacts with ease</p>
+                </div>
+                <h5 class="fw-bold mb-1"><i class="fas fa-archive me-2"></i>Step 1: Upload & Configure</h5>
+                <p class="text-muted mb-3">Upload your Excel file and configure email settings</p>
+                <div class="upload-area d-flex flex-column align-items-center justify-content-center py-4 mb-2" id="uploadArea" style="border: 2px dashed #007bff; border-radius: 10px; background: #f8f9fa; cursor: pointer;">
+                    <i class="fas fa-file-excel fa-3x text-primary mb-2"></i>
+                    <span class="fw-semibold mb-1">Drag & Drop your Excel file here</span>
+                    <span class="text-muted mb-2">or</span>
+                    <input type="file" id="fileInput" accept=".xlsx,.xls,.csv" style="display: none;">
+                    <button class="btn btn-primary" type="button" onclick="document.getElementById('fileInput').click()">
+                        <i class="fas fa-upload me-2"></i>Choose File
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- Configuration Section (shown after file upload) -->
+        <div id="configurationSection" class="mt-4" style="display: none;">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">📧 Email Configuration</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="campaignName" class="form-label">Campaign Name (Optional)</label>
+                                <input type="text" class="form-control" id="campaignName" placeholder="Enter campaign name">
+                            </div>
+                            <div class="mb-3">
+                                <label for="emailCol" class="form-label">Email Address Column</label>
+                                <select class="form-select" id="emailCol"></select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="pocCol" class="form-label">POC Name Column</label>
+                                <select class="form-select" id="pocCol"></select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="designationCol" class="form-label">Designation Column</label>
+                                <select class="form-select" id="designationCol"></select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="companyCol" class="form-label">Company Name Column</label>
+                                <select class="form-select" id="companyCol"></select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="templateSelect" class="form-label">Email Template</label>
+                                <select class="form-select" id="templateSelect"></select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="text-center mt-3">
+                        <button class="btn btn-success btn-lg me-2" onclick="previewEmails()">
+                            <i class="fas fa-eye me-2"></i>Preview & Send Emails
+                        </button>
+                        <button class="btn btn-outline-secondary" onclick="startNewCampaign()">
+                            <i class="fas fa-plus me-2"></i>New Campaign
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Data Preview Section -->
+        <div id="dataPreview" class="mt-4" style="display: none;">
+            <h5>📊 Data Preview</h5>
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead id="dataPreviewHeader"></thead>
+                    <tbody id="dataPreviewBody"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <!-- Step 2: Email Preview -->
+    <div id="step2" class="step-content" style="display:none;">
+        <h4>📧 Step 2: Preview & Send</h4>
+        <p class="text-muted">Review your personalized emails before sending</p>
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <button class="btn btn-secondary" onclick="showStep(1)">
+                    <i class="fas fa-arrow-left"></i> Back to Configuration
+                </button>
+            </div>
+            <div class="col-md-6 text-end">
+                <button class="btn btn-success me-2" onclick="sendEmails()">
+                    <i class="fas fa-paper-plane"></i> Send All Emails
+                </button>
+                <button class="btn btn-outline-primary" onclick="sendAnotherCampaign()">
+                    <i class="fas fa-redo"></i> Send Another
+                </button>
+            </div>
+        </div>
+        <div id="emailPreview"></div>
+        <!-- Pagination Controls -->
+        <div class="row mt-3">
+            <div class="col-12">
+                <nav aria-label="Email preview pagination">
+                    <ul id="paginationControls" class="pagination justify-content-center"></ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+    <!-- Results Modal -->
+    <div class="modal fade" id="resultsModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Email Sending Results</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body" id="resultsContent"></div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script>
+let currentFile = null;
+let currentData = null;
+let currentEmails = [];
+let currentPage = 1;
+let emailsPerPage = 10;
+
+// File upload handling
+const fileInput = document.getElementById('fileInput');
+const uploadArea = document.getElementById('uploadArea');
+fileInput.addEventListener('change', handleFileSelect);
+uploadArea.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    uploadArea.classList.add('dragover');
+});
+uploadArea.addEventListener('dragleave', () => {
+    uploadArea.classList.remove('dragover');
+});
+uploadArea.addEventListener('drop', (e) => {
+    e.preventDefault();
+    uploadArea.classList.remove('dragover');
+    const files = e.dataTransfer.files;
+    if (files.length > 0) {
+        handleFile(files[0]);
+    }
+});
+function handleFileSelect(e) {
+    const file = e.target.files[0];
+    if (file) {
+        handleFile(file);
+    }
+}
+function handleFile(file) {
+    if (!file) {
+        alert('No file selected');
+        return;
+    }
+    const formData = new FormData();
+    formData.append('excel_file', file);
+    fetch('/upload', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            currentFile = data.filename;
+            currentData = data;
+            populateColumnSelects(data.columns);
+            populateDataPreview(data.preview);
+            document.getElementById('configurationSection').style.display = 'block';
+            document.getElementById('dataPreview').style.display = 'block';
+        } else {
+            alert('Error: ' + data.error);
+        }
+    })
+    .catch(error => {
+        alert('Error uploading file: ' + error);
+    });
+}
+function populateColumnSelects(columns) {
+    if (!columns || !Array.isArray(columns)) return;
+    const selects = ['emailCol', 'pocCol', 'designationCol', 'companyCol'];
+    selects.forEach(selectId => {
+        const select = document.getElementById(selectId);
+        if (!select) return;
+        select.innerHTML = '';
+        columns.forEach(col => {
+            const option = document.createElement('option');
+            option.value = col;
+            option.textContent = col;
+            select.appendChild(option);
+        });
+    });
+    // Load templates
+    fetch('/templates')
+        .then(response => response.json())
+        .then(templates => {
+            const select = document.getElementById('templateSelect');
+            select.innerHTML = '';
+            templates.forEach(template => {
+                const option = document.createElement('option');
+                option.value = template;
+                option.textContent = template;
+                select.appendChild(option);
+            });
+        });
+}
+function populateDataPreview(data) {
+    const tbody = document.getElementById('dataPreviewBody');
+    const thead = document.getElementById('dataPreviewHeader');
+    const dataPreview = document.getElementById('dataPreview');
+    if (!tbody || !thead || !dataPreview) return;
+    tbody.innerHTML = '';
+    thead.innerHTML = '';
+    if (data && data.length > 0) {
+        const headerRow = document.createElement('tr');
+        Object.keys(data[0]).forEach(key => {
+            const th = document.createElement('th');
+            th.textContent = key;
+            headerRow.appendChild(th);
+        });
+        thead.appendChild(headerRow);
+        data.forEach(row => {
+            const tr = document.createElement('tr');
+            Object.values(row).forEach(value => {
+                const td = document.createElement('td');
+                td.textContent = value || '';
+                tr.appendChild(td);
+            });
+            tbody.appendChild(tr);
+        });
+        dataPreview.style.display = 'block';
+    }
+}
+function previewEmails() {
+    if (!currentFile) {
+        alert('Please upload a file first');
+        return;
+    }
+    const emailCol = document.getElementById('emailCol');
+    const pocCol = document.getElementById('pocCol');
+    const designationCol = document.getElementById('designationCol');
+    const companyCol = document.getElementById('companyCol');
+    const templateSelect = document.getElementById('templateSelect');
+    const data = {
+        filename: currentFile,
+        email_col: emailCol.value,
+        poc_col: pocCol.value,
+        designation_col: designationCol.value,
+        company_col: companyCol.value,
+        template_path: templateSelect.value,
+        page: currentPage,
+        per_page: emailsPerPage
+    };
+    fetch('/preview', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            currentEmails = data.preview_emails;
+            currentPage = data.pagination.current_page;
+            emailsPerPage = data.pagination.per_page;
+            displayEmailPreview(data.preview_emails, data.pagination);
+            showStep(2);
+        } else {
+            alert('Error: ' + data.error);
+        }
+    })
+    .catch(error => {
+        alert('Error previewing emails: ' + error);
+    });
+}
+function displayEmailPreview(emails, pagination = null) {
+    const container = document.getElementById('emailPreview');
+    if (!container) return;
+    container.innerHTML = '';
+    if (!emails || emails.length === 0) {
+        container.innerHTML = '<div class="alert alert-info">No emails to preview</div>';
+        return;
+    }
+    emails.forEach((email, index) => {
+        const card = document.createElement('div');
+        card.className = 'card mb-3 preview-card';
+        card.innerHTML = `
+            <div class="card-header">
+                <div class="row align-items-center">
+                    <div class="col-md-8">
+                        <h6 class="mb-0"><strong>To:</strong> ${email.to || 'N/A'}</h6>
+                        <small class="text-muted">Row ${email.row_number || index + 1}</small>
+                    </div>
+                    <div class="col-md-4 text-end">
+                        <span class="badge bg-primary">Email ${pagination ? (pagination.start_idx + index) : (index + 1)}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="row mb-2">
+                    <div class="col-md-6">
+                        <strong>Subject:</strong> ${email.subject || 'N/A'}
+                    </div>
+                    <div class="col-md-6">
+                        <strong>POC:</strong> ${email.poc_name || 'N/A'} (${email.designation || 'N/A'} at ${email.company || 'N/A'})
+                    </div>
+                </div>
+                <div class="mt-3">
+                    <strong>Email Body:</strong>
+                    <div class="border rounded p-3 bg-light mt-2" style="max-height: 400px; overflow-y: auto;">
+                        <div class="email-body-preview">
+                            ${email.body || 'No email body available'}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+        container.appendChild(card);
+    });
+    if (pagination) {
+        updatePaginationControls(pagination);
+    }
+}
+function updatePaginationControls(pagination) {
+    const paginationControls = document.getElementById('paginationControls');
+    if (!paginationControls || !pagination) return;
+    paginationControls.innerHTML = '';
+    if (pagination.total_pages > 1) {
+        if (pagination.current_page > 1) {
+            const prevBtn = document.createElement('li');
+            prevBtn.className = 'page-item';
+            prevBtn.innerHTML = `<a class="page-link" href="#" onclick="loadPage(${pagination.current_page - 1})">Previous</a>`;
+            paginationControls.appendChild(prevBtn);
+        }
+        const startPage = Math.max(1, pagination.current_page - 2);
+        const endPage = Math.min(pagination.total_pages, pagination.current_page + 2);
+        for (let i = startPage; i <= endPage; i++) {
+            const pageItem = document.createElement('li');
+            pageItem.className = `page-item ${i === pagination.current_page ? 'active' : ''}`;
+            pageItem.innerHTML = `<a class="page-link" href="#" onclick="loadPage(${i})">${i}</a>`;
+            paginationControls.appendChild(pageItem);
+        }
+        if (pagination.current_page < pagination.total_pages) {
+            const nextBtn = document.createElement('li');
+            nextBtn.className = 'page-item';
+            nextBtn.innerHTML = `<a class="page-link" href="#" onclick="loadPage(${pagination.current_page + 1})">Next</a>`;
+            paginationControls.appendChild(nextBtn);
+        }
+    }
+}
+function loadPage(page) {
+    currentPage = page;
+    previewEmails();
+}
+function sendEmails() {
+    if (!confirm(`Are you sure you want to send ${currentData.total_rows} emails?`)) return;
+    const data = {
+        filename: currentFile,
+        email_col: document.getElementById('emailCol').value,
+        poc_col: document.getElementById('pocCol').value,
+        designation_col: document.getElementById('designationCol').value,
+        company_col: document.getElementById('companyCol').value,
+        template_path: document.getElementById('templateSelect').value,
+        campaign_name: document.getElementById('campaignName').value || `Campaign ${new Date().toLocaleString()}`
+    };
+    fetch('/send', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            showResults(data);
+        } else {
+            alert('Error: ' + data.error);
+        }
+    })
+    .catch(error => {
+        alert('Error sending emails: ' + error);
+    });
+}
+function showResults(data) {
+    const modal = document.getElementById('resultsModal');
+    const content = document.getElementById('resultsContent');
+    const successRate = data.summary.total > 0 ? Math.round((data.summary.success / data.summary.total) * 100) : 0;
+    content.innerHTML = `
+        <div class="text-center mb-4">
+            <i class="fas fa-check-circle fa-3x text-success mb-3"></i>
+            <h4 class="text-success">Campaign Completed Successfully!</h4>
+            <p class="text-muted">Campaign: ${data.campaign_name}</p>
+        </div>
+        <div class="row mb-4">
+            <div class="col-md-3 text-center">
+                <div class="card bg-primary text-white">
+                    <div class="card-body">
+                        <h3>${data.summary.total}</h3>
+                        <small>Total Emails</small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 text-center">
+                <div class="card bg-success text-white">
+                    <div class="card-body">
+                        <h3>${data.summary.success}</h3>
+                        <small>Successfully Sent</small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 text-center">
+                <div class="card bg-danger text-white">
+                    <div class="card-body">
+                        <h3>${data.summary.errors}</h3>
+                        <small>Failed</small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 text-center">
+                <div class="card bg-warning text-white">
+                    <div class="card-body">
+                        <h3>${data.summary.skipped}</h3>
+                        <small>Skipped</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="text-center mb-3">
+            <h5>Success Rate: ${successRate}%</h5>
+        </div>
+        <div class="text-center">
+            <button class="btn btn-primary me-2" onclick="window.location.href='/history'">
+                <i class="fas fa-history me-2"></i>View Campaign History
+            </button>
+            <button class="btn btn-success me-2" onclick="goToHome()">
+                <i class="fas fa-redo me-2"></i>Send Another Campaign
+            </button>
+            <button class="btn btn-secondary" onclick="startNewCampaign()">
+                <i class="fas fa-plus me-2"></i>Start New Campaign
+            </button>
+        </div>
+    `;
+    new bootstrap.Modal(modal).show();
+}
+function goToHome() {
+    const modal = bootstrap.Modal.getInstance(document.getElementById('resultsModal'));
+    modal.hide();
+    showStep(1);
+    if (currentFile) {
+        document.getElementById('configurationSection').style.display = 'block';
+        document.getElementById('dataPreview').style.display = 'block';
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+}
+function startNewCampaign() {
+    document.getElementById('fileInput').value = '';
+    document.getElementById('campaignName').value = '';
+    currentFile = null;
+    currentData = null;
+    currentEmails = [];
+    currentPage = 1;
+    emailsPerPage = 10;
+    document.getElementById('configurationSection').style.display = 'none';
+    document.getElementById('dataPreview').style.display = 'none';
+}
+function sendAnotherCampaign() {
+    showStep(1);
+    if (currentFile) {
+        document.getElementById('configurationSection').style.display = 'block';
+        document.getElementById('dataPreview').style.display = 'block';
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+}
+function showStep(step) {
+    document.getElementById('step1').style.display = step === 1 ? '' : 'none';
+    document.getElementById('step2').style.display = step === 2 ? '' : 'none';
+}
+</script>
+{% endblock %} 

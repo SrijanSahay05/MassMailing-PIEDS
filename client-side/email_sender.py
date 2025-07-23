@@ -5,7 +5,7 @@ from googleapiclient.errors import HttpError
 from google_authentication import get_gmail_service
 
 
-def send_email(service, recipient_email, recipient_name, subject, body_text, is_html=False):
+def send_email(service, recipient_email, recipient_name, subject, body_text, is_html=False, index=None, total=None):
     """
     Creates and sends an email to a specific recipient.
 
@@ -16,6 +16,8 @@ def send_email(service, recipient_email, recipient_name, subject, body_text, is_
         subject: The subject line of the email.
         body_text: The content of the email body (plain text or HTML).
         is_html: If True, send as HTML. Otherwise, send as plain text.
+        index: (optional) The current email number in the batch.
+        total: (optional) The total number of emails in the batch.
 
     Returns:
         The sent message object if successful, otherwise None.
@@ -36,9 +38,12 @@ def send_email(service, recipient_email, recipient_name, subject, body_text, is_
         send_message = (
             service.users().messages().send(userId="me", body=create_message).execute()
         )
-        print(
-            f"Email sent successfully to {recipient_email}. Message ID: {send_message['id']}"
-        )
+        if index is not None and total is not None:
+            print(f"[{index}/{total}] Email sent successfully to {recipient_email}. Message ID: {send_message['id']}")
+        else:
+            print(
+                f"Email sent successfully to {recipient_email}. Message ID: {send_message['id']}"
+            )
         return send_message
     except HttpError as error:
         print(f"An error occurred while sending email to {recipient_email}: {error}")
