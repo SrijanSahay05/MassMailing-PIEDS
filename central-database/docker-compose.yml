@@ -1,6 +1,18 @@
 version: '3.9'
 
 services:
+  db:
+    image: postgres:16
+    container_name: postgres_db
+    environment:
+      POSTGRES_DB: mydb
+      POSTGRES_USER: myuser
+      POSTGRES_PASSWORD: mypassword
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
   web:
     build: .
     container_name: django_app
@@ -10,8 +22,8 @@ services:
       - ./:/app/
     expose:
       - 8000
-    # env_file:
-    #   - .env
+    depends_on:
+      - db
 
   nginx:
     image: nginx:1.25-alpine
@@ -27,4 +39,5 @@ services:
       - web
 
 volumes:
-  static_volume: 
+  static_volume:
+  postgres_data: 
