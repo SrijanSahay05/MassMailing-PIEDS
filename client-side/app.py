@@ -7,6 +7,7 @@ from werkzeug.utils import secure_filename
 from email_sender import send_email
 from google_authentication import get_gmail_service
 import requests
+from requests.exceptions import ConnectionError, Timeout
 
 app = Flask(__name__)
 app.secret_key = "your-secret-key-here"  # Change this in production
@@ -303,22 +304,32 @@ def preview_emails():
                     email=recipient_email,
                 )
 
+                # Ensure row_number is a native int
+                row_number = int(idx + 1)
+
+                # Convert all values to native Python types for JSON serialization
+                def to_native(val):
+                    import numpy as np
+                    if isinstance(val, (np.generic,)):
+                        return val.item()
+                    return val
+
                 preview_emails.append(
                     {
-                        "to": recipient_email,
-                        "poc_name": poc_name,
-                        "designation": designation,
-                        "company": company,
-                        "subject": subject,
-                        "body": body,  # Full HTML body for proper rendering
-                        "row_number": idx + 1,
+                        "to": str(recipient_email),
+                        "poc_name": str(poc_name),
+                        "designation": str(designation),
+                        "company": str(company),
+                        "subject": str(subject),
+                        "body": str(body),  # Full HTML body for proper rendering
+                        "row_number": row_number,
                     }
                 )
             except Exception as e:
                 return jsonify(
                     {
                         "success": False,
-                        "error": f"Error processing row {idx + 1}: {str(e)}",
+                        "error": f"Error processing row {int(idx + 1)}: {str(e)}",
                     }
                 )
 
@@ -413,6 +424,7 @@ def send_emails():
 
         # Send emails
         results = []
+        total_to_send = len(df)
         for idx, row in df.iterrows():
             try:
                 recipient_email = row[email_col] or ""
@@ -427,6 +439,8 @@ def send_emails():
                             "email": "N/A",
                             "status": "skipped",
                             "message": "No email address provided",
+                            "progress": f"{idx+1}/{total_to_send}",
+                            "debug": f"Row {idx+1}: Skipped (no email)"
                         }
                     )
                     continue
@@ -441,6 +455,7 @@ def send_emails():
                     email=recipient_email,
                 )
 
+                # Send the email first
                 sent_message_object = send_email(
                     gmail_service,
                     recipient_email,
@@ -448,8 +463,9 @@ def send_emails():
                     subject,
                     body,
                     is_html=True,
+                    index=idx+1,
+                    total=total_to_send
                 )
-
                 thread_id = sent_message_object.get('threadId') if sent_message_object else None
 
                 crm_data = {
@@ -463,11 +479,21 @@ def send_emails():
                 }
                 try:
                     resp = requests.post("https://crm.srijansahay05.in/api/crm/contacts/", json=crm_data, timeout=5)
+                except (ConnectionError, Timeout) as api_err:
+                    return jsonify({
+                        "success": False,
+                        "error": "CRM server is unreachable or timed out. Please check the backend server.",
+                        "details": str(api_err),
+                        "progress": f"{idx+1}/{total_to_send}",
+                        "debug": f"Row {idx+1}: CRM connection error for {recipient_email}"
+                    }), 503
                 except Exception as api_err:
                     results.append({
                         "email": recipient_email,
                         "status": "error",
                         "message": f"Failed to create contact in CRM: {api_err}",
+                        "progress": f"{idx+1}/{total_to_send}",
+                        "debug": f"Row {idx+1}: CRM error for {recipient_email}: {api_err}"
                     })
                     continue
 
@@ -477,6 +503,8 @@ def send_emails():
                             "email": recipient_email,
                             "status": "success",
                             "message": "Email sent successfully",
+                            "progress": f"{idx+1}/{total_to_send}",
+                            "debug": f"Row {idx+1}: Email sent to {recipient_email}, thread_id={thread_id}"
                         }
                     )
                 else:
@@ -484,6 +512,8 @@ def send_emails():
                         "email": recipient_email,
                         "status": "error",
                         "message": f"Failed to create contact in CRM: {resp.text}",
+                        "progress": f"{idx+1}/{total_to_send}",
+                        "debug": f"Row {idx+1}: CRM error for {recipient_email}: {resp.text}"
                     })
                     continue
 
@@ -493,6 +523,8 @@ def send_emails():
                         "email": recipient_email or "N/A",
                         "status": "error",
                         "message": str(e),
+                        "progress": f"{idx+1}/{total_to_send}",
+                        "debug": f"Row {idx+1}: Exception for {recipient_email}: {e}"
                     }
                 )
 
@@ -513,6 +545,8 @@ def send_emails():
             }
         )
 
+    except (ConnectionError, Timeout) as e:
+        return jsonify({"success": False, "error": "CRM server is unreachable or timed out. Please check the backend server.", "details": str(e)}), 503
     except Exception as e:
         return jsonify({"success": False, "error": f"Send error: {str(e)}"})
 
@@ -548,12 +582,18 @@ def dashboard():
     # Pagination
     page = int(request.args.get('page', 1))
     page_size = 10
+    crm_error = None
     try:
-        resp = requests.get('https://crm.srijansahay05.in/api/crm/contacts/list/', params={'user_email': user_email, 'page': page, 'page_size': page_size}, timeout=6000)
+        resp = requests.get('https://crm.srijansahay05.in/api/crm/contacts/list/', params={'user_email': user_email, 'page': page, 'page_size': page_size}, timeout=6)
         data = resp.json() if resp.status_code == 200 else {}
         contacts = data.get('results', [])
         total = data.get('total', 0)
         total_pages = data.get('total_pages', 1)
+    except (ConnectionError, Timeout) as e:
+        contacts = []
+        total = 0
+        total_pages = 1
+        crm_error = 'CRM server is unreachable or timed out. Please check the backend server.'
     except Exception as e:
         contacts = []
         total = 0
@@ -571,7 +611,16 @@ def dashboard():
             return str(val)
     for c in contacts:
         c['sent_at_formatted'] = format_sent_at(c.get('sent_at'))
-    return render_template('dashboard.html', contacts=contacts, user_email=user_email, page=page, total_pages=total_pages)
+    return render_template('dashboard.html', contacts=contacts, user_email=user_email, page=page, total_pages=total_pages, crm_error=crm_error)
+
+
+@app.errorhandler(ConnectionError)
+def handle_connection_error(e):
+    return jsonify({"success": False, "error": "CRM server is unreachable. Please check the backend server."}), 503
+
+@app.errorhandler(Timeout)
+def handle_timeout_error(e):
+    return jsonify({"success": False, "error": "CRM server timed out. Please check the backend server."}), 504
 
 
 if __name__ == "__main__":

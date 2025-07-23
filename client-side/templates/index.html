@@ -1,135 +1,133 @@
 {% extends "base.html" %}
 {% block title %}Home - PIEDS Mass Mailing System{% endblock %}
 {% block content %}
-<div class="container-fluid py-5">
-    <div class="main-container p-4">
-        <div class="text-center mb-4">
-            <h1 class="display-4 fw-bold text-primary">
-                <i class="fas fa-envelope-open-text me-3"></i>
-                PIEDS Mass Mailing System
-            </h1>
-            <p class="lead text-muted">Send personalized emails to your contacts with ease</p>
+<div class="main-card">
+    <div class="text-center mb-4">
+        <h1 class="display-4 fw-bold text-primary">
+            <i class="fas fa-envelope-open-text me-3"></i>
+            PIEDS Mass Mailing System
+        </h1>
+        <p class="lead text-muted">Send personalized emails to your contacts with ease</p>
+    </div>
+    <!-- Step 1: Upload Excel File -->
+    <div id="step1" class="step-content active">
+        <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 50vh;">
+            <div class="card p-4 shadow-sm" style="min-width: 350px; max-width: 400px;">
+                <div class="text-center mb-3">
+                    <i class="fas fa-envelope-open-text fa-3x text-primary mb-2"></i>
+                    <h2 class="fw-bold text-primary mb-1">PIEDS Mass Mailing System</h2>
+                    <p class="text-muted mb-0">Send personalized emails to your contacts with ease</p>
+                </div>
+                <h5 class="fw-bold mb-1"><i class="fas fa-archive me-2"></i>Step 1: Upload & Configure</h5>
+                <p class="text-muted mb-3">Upload your Excel file and configure email settings</p>
+                <div class="upload-area d-flex flex-column align-items-center justify-content-center py-4 mb-2" id="uploadArea" style="border: 2px dashed #007bff; border-radius: 10px; background: #f8f9fa; cursor: pointer;">
+                    <i class="fas fa-file-excel fa-3x text-primary mb-2"></i>
+                    <span class="fw-semibold mb-1">Drag & Drop your Excel file here</span>
+                    <span class="text-muted mb-2">or</span>
+                    <input type="file" id="fileInput" accept=".xlsx,.xls,.csv" style="display: none;">
+                    <button class="btn btn-primary" type="button" onclick="document.getElementById('fileInput').click()">
+                        <i class="fas fa-upload me-2"></i>Choose File
+                    </button>
+                </div>
+            </div>
         </div>
-        <!-- Step 1: Upload Excel File -->
-        <div id="step1" class="step-content active">
-            <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 50vh;">
-                <div class="card p-4 shadow-sm" style="min-width: 350px; max-width: 400px;">
-                    <div class="text-center mb-3">
-                        <i class="fas fa-envelope-open-text fa-3x text-primary mb-2"></i>
-                        <h2 class="fw-bold text-primary mb-1">PIEDS Mass Mailing System</h2>
-                        <p class="text-muted mb-0">Send personalized emails to your contacts with ease</p>
+        <!-- Configuration Section (shown after file upload) -->
+        <div id="configurationSection" class="mt-4" style="display: none;">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">📧 Email Configuration</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="campaignName" class="form-label">Campaign Name (Optional)</label>
+                                <input type="text" class="form-control" id="campaignName" placeholder="Enter campaign name">
+                            </div>
+                            <div class="mb-3">
+                                <label for="emailCol" class="form-label">Email Address Column</label>
+                                <select class="form-select" id="emailCol"></select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="pocCol" class="form-label">POC Name Column</label>
+                                <select class="form-select" id="pocCol"></select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="designationCol" class="form-label">Designation Column</label>
+                                <select class="form-select" id="designationCol"></select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="companyCol" class="form-label">Company Name Column</label>
+                                <select class="form-select" id="companyCol"></select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="templateSelect" class="form-label">Email Template</label>
+                                <select class="form-select" id="templateSelect"></select>
+                            </div>
+                        </div>
                     </div>
-                    <h5 class="fw-bold mb-1"><i class="fas fa-archive me-2"></i>Step 1: Upload & Configure</h5>
-                    <p class="text-muted mb-3">Upload your Excel file and configure email settings</p>
-                    <div class="upload-area d-flex flex-column align-items-center justify-content-center py-4 mb-2" id="uploadArea" style="border: 2px dashed #007bff; border-radius: 10px; background: #f8f9fa; cursor: pointer;">
-                        <i class="fas fa-file-excel fa-3x text-primary mb-2"></i>
-                        <span class="fw-semibold mb-1">Drag & Drop your Excel file here</span>
-                        <span class="text-muted mb-2">or</span>
-                        <input type="file" id="fileInput" accept=".xlsx,.xls,.csv" style="display: none;">
-                        <button class="btn btn-primary" type="button" onclick="document.getElementById('fileInput').click()">
-                            <i class="fas fa-upload me-2"></i>Choose File
+                    <div class="text-center mt-3">
+                        <button class="btn btn-success btn-lg me-2" onclick="previewEmails()">
+                            <i class="fas fa-eye me-2"></i>Preview & Send Emails
+                        </button>
+                        <button class="btn btn-outline-secondary" onclick="startNewCampaign()">
+                            <i class="fas fa-plus me-2"></i>New Campaign
                         </button>
                     </div>
                 </div>
             </div>
-            <!-- Configuration Section (shown after file upload) -->
-            <div id="configurationSection" class="mt-4" style="display: none;">
-                <div class="card">
-                    <div class="card-header">
-                        <h5 class="mb-0">📧 Email Configuration</h5>
-                    </div>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="mb-3">
-                                    <label for="campaignName" class="form-label">Campaign Name (Optional)</label>
-                                    <input type="text" class="form-control" id="campaignName" placeholder="Enter campaign name">
-                                </div>
-                                <div class="mb-3">
-                                    <label for="emailCol" class="form-label">Email Address Column</label>
-                                    <select class="form-select" id="emailCol"></select>
-                                </div>
-                                <div class="mb-3">
-                                    <label for="pocCol" class="form-label">POC Name Column</label>
-                                    <select class="form-select" id="pocCol"></select>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="mb-3">
-                                    <label for="designationCol" class="form-label">Designation Column</label>
-                                    <select class="form-select" id="designationCol"></select>
-                                </div>
-                                <div class="mb-3">
-                                    <label for="companyCol" class="form-label">Company Name Column</label>
-                                    <select class="form-select" id="companyCol"></select>
-                                </div>
-                                <div class="mb-3">
-                                    <label for="templateSelect" class="form-label">Email Template</label>
-                                    <select class="form-select" id="templateSelect"></select>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="text-center mt-3">
-                            <button class="btn btn-success btn-lg me-2" onclick="previewEmails()">
-                                <i class="fas fa-eye me-2"></i>Preview & Send Emails
-                            </button>
-                            <button class="btn btn-outline-secondary" onclick="startNewCampaign()">
-                                <i class="fas fa-plus me-2"></i>New Campaign
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- Data Preview Section -->
-            <div id="dataPreview" class="mt-4" style="display: none;">
-                <h5>📊 Data Preview</h5>
-                <div class="table-responsive">
-                    <table class="table table-striped">
-                        <thead id="dataPreviewHeader"></thead>
-                        <tbody id="dataPreviewBody"></tbody>
-                    </table>
-                </div>
+        </div>
+        <!-- Data Preview Section -->
+        <div id="dataPreview" class="mt-4" style="display: none;">
+            <h5>📊 Data Preview</h5>
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead id="dataPreviewHeader"></thead>
+                    <tbody id="dataPreviewBody"></tbody>
+                </table>
             </div>
         </div>
-        <!-- Step 2: Email Preview -->
-        <div id="step2" class="step-content" style="display:none;">
-            <h4>📧 Step 2: Preview & Send</h4>
-            <p class="text-muted">Review your personalized emails before sending</p>
-            <div class="row mb-3">
-                <div class="col-md-6">
-                    <button class="btn btn-secondary" onclick="showStep(1)">
-                        <i class="fas fa-arrow-left"></i> Back to Configuration
-                    </button>
-                </div>
-                <div class="col-md-6 text-end">
-                    <button class="btn btn-success me-2" onclick="sendEmails()">
-                        <i class="fas fa-paper-plane"></i> Send All Emails
-                    </button>
-                    <button class="btn btn-outline-primary" onclick="sendAnotherCampaign()">
-                        <i class="fas fa-redo"></i> Send Another
-                    </button>
-                </div>
+    </div>
+    <!-- Step 2: Email Preview -->
+    <div id="step2" class="step-content" style="display:none;">
+        <h4>📧 Step 2: Preview & Send</h4>
+        <p class="text-muted">Review your personalized emails before sending</p>
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <button class="btn btn-secondary" onclick="showStep(1)">
+                    <i class="fas fa-arrow-left"></i> Back to Configuration
+                </button>
             </div>
-            <div id="emailPreview"></div>
-            <!-- Pagination Controls -->
-            <div class="row mt-3">
-                <div class="col-12">
-                    <nav aria-label="Email preview pagination">
-                        <ul id="paginationControls" class="pagination justify-content-center"></ul>
-                    </nav>
-                </div>
+            <div class="col-md-6 text-end">
+                <button class="btn btn-success me-2" onclick="sendEmails()">
+                    <i class="fas fa-paper-plane"></i> Send All Emails
+                </button>
+                <button class="btn btn-outline-primary" onclick="sendAnotherCampaign()">
+                    <i class="fas fa-redo"></i> Send Another
+                </button>
             </div>
         </div>
-        <!-- Results Modal -->
-        <div class="modal fade" id="resultsModal" tabindex="-1">
-            <div class="modal-dialog modal-lg">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Email Sending Results</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                    </div>
-                    <div class="modal-body" id="resultsContent"></div>
+        <div id="emailPreview"></div>
+        <!-- Pagination Controls -->
+        <div class="row mt-3">
+            <div class="col-12">
+                <nav aria-label="Email preview pagination">
+                    <ul id="paginationControls" class="pagination justify-content-center"></ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+    <!-- Results Modal -->
+    <div class="modal fade" id="resultsModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Email Sending Results</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
+                <div class="modal-body" id="resultsContent"></div>
             </div>
         </div>
     </div>

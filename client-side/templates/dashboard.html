@@ -1,105 +1,76 @@
 {% extends "base.html" %}
 {% block title %}CRM Dashboard{% endblock %}
 {% block content %}
-<div class="container-fluid py-5">
-    <div class="card shadow">
-        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
-            <h2 class="mb-0">Your CRM Pipeline</h2>
-            <form class="d-flex" id="searchForm" onsubmit="event.preventDefault(); filterTable();">
-                <input class="form-control me-2" type="search" placeholder="Search by name, email, company..." id="searchInput">
-                <button class="btn btn-light" type="submit"><i class="fas fa-search"></i></button>
-            </form>
-        </div>
-        <div class="card-body">
-            <div class="row mb-3">
-                <div class="col-md-4">
-                    <label for="statusFilter" class="form-label">Status</label>
-                    <select class="form-select" id="statusFilter" onchange="filterTable()">
-                        <option value="">All</option>
-                        <option value="CONTACTED">Contacted</option>
-                        <option value="IN_TALKS">In Talks</option>
-                        <option value="NEGOTIATION">Negotiation</option>
-                        <option value="CLOSED_WIN">Closed-Win</option>
-                        <option value="CLOSED_LOST">Closed-Lost</option>
-                    </select>
-                </div>
-                <div class="col-md-4">
-                    <label for="senderFilter" class="form-label">Sender</label>
-                    <input class="form-control" id="senderFilter" placeholder="Filter by sender" oninput="filterTable()">
-                </div>
-                <div class="col-md-4">
-                    <label for="assignedToFilter" class="form-label">Assigned To</label>
-                    <input class="form-control" id="assignedToFilter" placeholder="Filter by assigned to" oninput="filterTable()">
-                </div>
-            </div>
-            <form id="pipelineForm" onsubmit="submitPipeline(event)">
-                <div class="table-responsive">
-                    <table class="table table-bordered table-hover align-middle" id="contactsTable">
-                        <thead class="table-light">
-                            <tr>
-                                <th>POC Name</th>
-                                <th>Email</th>
-                                <th>Company</th>
-                                <th>Status</th>
-                                <th>Sender</th>
-                                <th>Assigned To</th>
-                                <th>Sent At</th>
-                                <th>Thread</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                        {% for c in contacts %}
-                            <tr>
-                                <td>{{ c.poc_name }}</td>
-                                <td>{{ c.email }}</td>
-                                <td>{{ c.company }}</td>
-                                <td>
-                                    <select class="form-select" name="status_{{c.id}}" data-contact-id="{{c.id}}">
-                                        <option value="CONTACTED" {% if c.status == 'CONTACTED' %}selected{% endif %}>Contacted</option>
-                                        <option value="IN_TALKS" {% if c.status == 'IN_TALKS' %}selected{% endif %}>In Talks</option>
-                                        <option value="NEGOTIATION" {% if c.status == 'NEGOTIATION' %}selected{% endif %}>Negotiation</option>
-                                        <option value="CLOSED_WIN" {% if c.status == 'CLOSED_WIN' %}selected{% endif %}>Closed-Win</option>
-                                        <option value="CLOSED_LOST" {% if c.status == 'CLOSED_LOST' %}selected{% endif %}>Closed-Lost</option>
-                                    </select>
-                                </td>
-                                <td>{{ c.sender or '' }}</td>
-                                <td>{{ c.assigned_to or '' }}</td>
-                                <td>{{ c.sent_at_formatted }}</td>
-                                <td>
-                                    {% if c.gmail_thread_id %}
-                                        <a href="https://mail.google.com/mail/u/0/#all/{{ c.gmail_thread_id }}" target="_blank" class="btn btn-outline-primary btn-sm">View Thread</a>
-                                    {% else %}
-                                        <span class="text-muted">No Thread</span>
-                                    {% endif %}
-                                </td>
-                            </tr>
-                        {% endfor %}
-                        {% if contacts|length == 0 %}
-                            <tr><td colspan="7" class="text-center text-muted">No contacts found.</td></tr>
-                        {% endif %}
-                        </tbody>
-                    </table>
-                </div>
-                <div class="text-end">
-                    <button type="submit" class="btn btn-primary">Submit Pipeline Changes</button>
-                </div>
-                <div class="d-flex justify-content-center align-items-center mt-3">
-                    <nav aria-label="Dashboard pagination">
-                        <ul class="pagination mb-0">
-                            <li class="page-item {% if page <= 1 %}disabled{% endif %}">
-                                <a class="page-link" href="?page={{ page - 1 }}" tabindex="-1">Previous</a>
-                            </li>
-                            <li class="page-item disabled"><span class="page-link">Page {{ page }} of {{ total_pages }}</span></li>
-                            <li class="page-item {% if page >= total_pages %}disabled{% endif %}">
-                                <a class="page-link" href="?page={{ page + 1 }}">Next</a>
-                            </li>
-                        </ul>
-                    </nav>
-                </div>
-            </form>
-        </div>
-    </div>
+{% if crm_error %}
+<div class="alert alert-danger" role="alert">
+    {{ crm_error }}
 </div>
+{% endif %}
+<form id="pipelineForm" onsubmit="submitPipeline(event)">
+    <div class="table-responsive" style="overflow-x:auto;">
+        <table class="table table-bordered table-hover align-middle" id="contactsTable">
+            <thead class="table-light">
+                <tr>
+                    <th>POC Name</th>
+                    <th>Email</th>
+                    <th>Company</th>
+                    <th>Status</th>
+                    <th>Sender</th>
+                    <th>Assigned To</th>
+                    <th>Sent At</th>
+                    <th>Thread</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for c in contacts %}
+                <tr>
+                    <td>{{ c.poc_name }}</td>
+                    <td>{{ c.email }}</td>
+                    <td>{{ c.company }}</td>
+                    <td>
+                        <select class="form-select" name="status_{{c.id}}" data-contact-id="{{c.id}}">
+                            <option value="CONTACTED" {% if c.status == 'CONTACTED' %}selected{% endif %}>Contacted</option>
+                            <option value="IN_TALKS" {% if c.status == 'IN_TALKS' %}selected{% endif %}>In Talks</option>
+                            <option value="NEGOTIATION" {% if c.status == 'NEGOTIATION' %}selected{% endif %}>Negotiation</option>
+                            <option value="CLOSED_WIN" {% if c.status == 'CLOSED_WIN' %}selected{% endif %}>Closed-Win</option>
+                            <option value="CLOSED_LOST" {% if c.status == 'CLOSED_LOST' %}selected{% endif %}>Closed-Lost</option>
+                        </select>
+                    </td>
+                    <td>{{ c.sender or '' }}</td>
+                    <td>{{ c.assigned_to or '' }}</td>
+                    <td>{{ c.sent_at_formatted }}</td>
+                    <td>
+                        {% if c.gmail_thread_id %}
+                            <a href="https://mail.google.com/mail/u/0/#all/{{ c.gmail_thread_id }}" target="_blank" class="btn btn-outline-primary btn-sm">View Thread</a>
+                        {% else %}
+                            <span class="text-muted">No Thread</span>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+            {% if contacts|length == 0 %}
+                <tr><td colspan="8" class="text-center text-muted">No contacts found.</td></tr>
+            {% endif %}
+            </tbody>
+        </table>
+    </div>
+    <div class="text-end mt-3">
+        <button type="submit" class="btn btn-primary">Submit Pipeline Changes</button>
+    </div>
+    <div class="d-flex justify-content-center align-items-center mt-3">
+        <nav aria-label="Dashboard pagination">
+            <ul class="pagination mb-0">
+                <li class="page-item {% if page <= 1 %}disabled{% endif %}">
+                    <a class="page-link" href="?page={{ page - 1 }}" tabindex="-1">Previous</a>
+                </li>
+                <li class="page-item disabled"><span class="page-link">Page {{ page }} of {{ total_pages }}</span></li>
+                <li class="page-item {% if page >= total_pages %}disabled{% endif %}">
+                    <a class="page-link" href="?page={{ page + 1 }}">Next</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</form>
 {% endblock %}
 {% block scripts %}
 <script>
