@@ -25,7 +25,7 @@ SECRET_KEY = "django-insecure-x1c)t#=!ty^u424mta2&1&b7(aj$i__sc1-hq6yp%#i8l#33-j
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = ["crm.srijansahay05.in"]
 
 
 # Application definition
@@ -56,7 +56,10 @@ MIDDLEWARE = [
 ]
 
 CORS_ALLOW_ALL_ORIGINS = True  # For development only
-CSRF_TRUSTED_ORIGINS = ["https://*", "http://*"]
+CSRF_TRUSTED_ORIGINS = [
+    "https://crm.srijansahay05.in"
+]
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
 ROOT_URLCONF = "core.urls"
 

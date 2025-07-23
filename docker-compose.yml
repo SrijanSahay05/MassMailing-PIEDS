@@ -1,0 +1,7 @@
+  web:
+    build: .
+    container_name: django_app
+    command: gunicorn core.wsgi:application --bind 0.0.0.0:8000 --workers=3
+    volumes:
+      - ./:/app
+      - static_volume:/app/static 
