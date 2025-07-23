@@ -56,5 +56,34 @@
       "designation_col": "designation",
       "company_col": "company name"
     }
+  },
+  {
+    "id": 3,
+    "timestamp": "2025-07-23T12:31:49.829338",
+    "campaign_name": "Campaign 23/07/2025, 12:31:46",
+    "filename": "template.xlsx",
+    "template_used": "draft_template.txt",
+    "total_emails": 2,
+    "success_count": 2,
+    "error_count": 0,
+    "skipped_count": 0,
+    "results": [
+      {
+        "email": "srijan.sahay2k5@gmail.com",
+        "status": "success",
+        "message": "Email sent successfully"
+      },
+      {
+        "email": "srijan05sahay@gmail.com",
+        "status": "success",
+        "message": "Email sent successfully"
+      }
+    ],
+    "column_mapping": {
+      "email_col": "email address",
+      "poc_col": "poc name",
+      "designation_col": "designation",
+      "company_col": "company name"
+    }
   }
 ]
