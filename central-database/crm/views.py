@@ -6,6 +6,7 @@ from .models import Contact
 from .serializers import ContactSerializer
 import logging
 from django.db import models
+from math import ceil
 
 # Create your views here.
 
@@ -20,9 +21,22 @@ def create_contact(request):
 @api_view(['GET'])
 def user_contacts(request):
     user_email = request.GET.get('user_email')
-    contacts = Contact.objects.filter(models.Q(sender=user_email) | models.Q(assigned_to=user_email))
+    page = int(request.GET.get('page', 1))
+    page_size = int(request.GET.get('page_size', 10))
+    contacts_qs = Contact.objects.filter(models.Q(sender=user_email) | models.Q(assigned_to=user_email)).order_by('-sent_at')
+    total = contacts_qs.count()
+    total_pages = ceil(total / page_size) if page_size else 1
+    start = (page - 1) * page_size
+    end = start + page_size
+    contacts = contacts_qs[start:end]
     serializer = ContactSerializer(contacts, many=True)
-    return Response(serializer.data)
+    return Response({
+        'results': serializer.data,
+        'total': total,
+        'page': page,
+        'page_size': page_size,
+        'total_pages': total_pages
+    })
 
 @api_view(['PATCH'])
 def update_status(request, pk):
