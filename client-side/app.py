@@ -462,7 +462,7 @@ def send_emails():
                     "gmail_thread_id": thread_id
                 }
                 try:
-                    resp = requests.post("http://localhost:8000/api/crm/contacts/", json=crm_data, timeout=5)
+                    resp = requests.post("https://crm.srijansahay05.in/api/crm/contacts/", json=crm_data, timeout=5)
                 except Exception as api_err:
                     results.append({
                         "email": recipient_email,
@@ -531,6 +531,7 @@ def list_templates():
 
 @app.route('/dashboard')
 def dashboard():
+    from flask import request
     # Try to get the authenticated user's email from Gmail
     try:
         gmail_service = get_gmail_service()
@@ -544,13 +545,33 @@ def dashboard():
         contacts = []
         flash(f'Error fetching user email: {str(e)}', 'danger')
         return render_template('dashboard.html', contacts=contacts, user_email=user_email)
+    # Pagination
+    page = int(request.args.get('page', 1))
+    page_size = 10
     try:
-        resp = requests.get('http://localhost:8000/api/crm/contacts/list/', params={'user_email': user_email}, timeout=5)
-        contacts = resp.json() if resp.status_code == 200 else []
+        resp = requests.get('https://crm.srijansahay05.in/api/crm/contacts/list/', params={'user_email': user_email, 'page': page, 'page_size': page_size}, timeout=6000)
+        data = resp.json() if resp.status_code == 200 else {}
+        contacts = data.get('results', [])
+        total = data.get('total', 0)
+        total_pages = data.get('total_pages', 1)
     except Exception as e:
         contacts = []
+        total = 0
+        total_pages = 1
         flash(f'Error fetching contacts: {str(e)}', 'danger')
-    return render_template('dashboard.html', contacts=contacts, user_email=user_email)
+    # Format sent_at for display
+    def format_sent_at(val):
+        if not val:
+            return "-"
+        try:
+            from datetime import datetime
+            dt = datetime.fromisoformat(val)
+            return dt.strftime("%H:%M || %d/%m/%Y")
+        except Exception:
+            return str(val)
+    for c in contacts:
+        c['sent_at_formatted'] = format_sent_at(c.get('sent_at'))
+    return render_template('dashboard.html', contacts=contacts, user_email=user_email, page=page, total_pages=total_pages)
 
 
 if __name__ == "__main__":

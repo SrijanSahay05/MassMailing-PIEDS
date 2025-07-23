@@ -64,7 +64,7 @@
                                 </td>
                                 <td>{{ c.sender or '' }}</td>
                                 <td>{{ c.assigned_to or '' }}</td>
-                                <td>{{ c.sent_at|default('-') }}</td>
+                                <td>{{ c.sent_at_formatted }}</td>
                                 <td>
                                     {% if c.gmail_thread_id %}
                                         <a href="https://mail.google.com/mail/u/0/#all/{{ c.gmail_thread_id }}" target="_blank" class="btn btn-outline-primary btn-sm">View Thread</a>
@@ -82,6 +82,19 @@
                 </div>
                 <div class="text-end">
                     <button type="submit" class="btn btn-primary">Submit Pipeline Changes</button>
+                </div>
+                <div class="d-flex justify-content-center align-items-center mt-3">
+                    <nav aria-label="Dashboard pagination">
+                        <ul class="pagination mb-0">
+                            <li class="page-item {% if page <= 1 %}disabled{% endif %}">
+                                <a class="page-link" href="?page={{ page - 1 }}" tabindex="-1">Previous</a>
+                            </li>
+                            <li class="page-item disabled"><span class="page-link">Page {{ page }} of {{ total_pages }}</span></li>
+                            <li class="page-item {% if page >= total_pages %}disabled{% endif %}">
+                                <a class="page-link" href="?page={{ page + 1 }}">Next</a>
+                            </li>
+                        </ul>
+                    </nav>
                 </div>
             </form>
         </div>
@@ -113,6 +126,42 @@ function filterTable() {
         if (assignedTo && !rowAssignedTo.includes(assignedTo)) show = false;
         rows[i].style.display = show ? '' : 'none';
     }
+}
+
+function submitPipeline(event) {
+    event.preventDefault();
+    const selects = document.querySelectorAll('select.form-select[data-contact-id]');
+    const updates = [];
+    selects.forEach(select => {
+        const contactId = select.getAttribute('data-contact-id');
+        const newStatus = select.value;
+        const originalStatus = select.querySelector('option[selected]')?.value;
+        // Only update if status changed (or always update if you want)
+        if (!originalStatus || newStatus !== originalStatus) {
+            updates.push({ id: contactId, status: newStatus });
+        }
+    });
+    if (updates.length === 0) {
+        alert('No changes to submit.');
+        return;
+    }
+    let completed = 0, failed = 0;
+    const promises = updates.map(update => {
+        return fetch(`https://crm.srijansahay05.in/api/crm/contacts/${update.id}/status/`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ status: update.status })
+        })
+        .then(response => {
+            if (!response.ok) throw new Error('Failed to update contact ' + update.id);
+            completed++;
+        })
+        .catch(() => { failed++; });
+    });
+    Promise.all(promises).then(() => {
+        alert(`Pipeline update complete. Success: ${completed}, Failed: ${failed}`);
+        window.location.reload();
+    });
 }
 </script>
 {% endblock %} 
