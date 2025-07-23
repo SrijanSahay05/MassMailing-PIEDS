@@ -98,6 +98,10 @@ def home():
 def history():
     return render_template('history.html')
 
+@app.route('/draft-editor')
+def draft_editor():
+    return render_template('draft_editor.html')
+
 @app.route('/api/history')
 def get_history():
     """API endpoint to get mailing history."""

@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Draft Editor - PIEDS Mass Mailing System</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: white;
+            min-height: 100vh;
+        }
+        
+        .navbar {
+            background: rgba(255, 255, 255, 0.95) !important;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .main-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            backdrop-filter: blur(10px);
+        }
+        
+        .file-selector {
+            border: 2px dashed #007bff;
+            border-radius: 10px;
+            padding: 40px;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            margin-bottom: 20px;
+        }
+        
+        .file-selector:hover {
+            border-color: #0056b3;
+            background-color: rgba(0, 123, 255, 0.05);
+        }
+        
+        .editor-container {
+            display: none;
+        }
+        
+        .editor-container.active {
+            display: block;
+        }
+        
+        .subject-editor, .body-editor {
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .subject-editor textarea {
+            border: none;
+            outline: none;
+            width: 100%;
+            resize: vertical;
+            min-height: 60px;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        
+        .body-editor {
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .body-editor .rich-editor {
+            border: 1px solid #dee2e6;
+            outline: none;
+            width: 100%;
+            min-height: 400px;
+            font-size: 14px;
+            line-height: 1.6;
+            font-family: 'Times New Roman', serif;
+            padding: 15px;
+            background: white;
+            overflow-y: auto;
+            word-wrap: break-word;
+        }
+        
+        .body-editor .rich-editor:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+        }
+        
+        .body-editor .rich-editor.empty:before {
+            content: attr(data-placeholder);
+            color: #6c757d;
+            font-style: italic;
+            pointer-events: none;
+            position: absolute;
+            top: 15px;
+            left: 15px;
+        }
+        
+        .body-editor .rich-editor {
+            position: relative;
+        }
+        
+        .toolbar {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-bottom: none;
+            border-radius: 8px 8px 0 0;
+            padding: 10px;
+            display: flex;
+            gap: 5px;
+            flex-wrap: wrap;
+        }
+        
+        .toolbar button {
+            padding: 5px 10px;
+            border: 1px solid #dee2e6;
+            background: white;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        
+        .toolbar button:hover {
+            background: #e9ecef;
+        }
+        
+        .toolbar button.active {
+            background: #007bff;
+            color: white;
+            border-color: #007bff;
+        }
+        
+        .editor-container {
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+        }
+        
+        .preview-container {
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 20px;
+            background-color: #f8f9fa;
+            margin-top: 20px;
+        }
+        
+        .loading {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .loading-content {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        
+        .btn-group-actions {
+            margin-top: 20px;
+        }
+        
+        .btn-group-actions .btn {
+            margin-right: 10px;
+        }
+        
+        .file-info {
+            background-color: #e9ecef;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-light">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="/">
+                <i class="fas fa-envelope-open-text me-2"></i>
+                PIEDS Mass Mailing System
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/home">
+                            <i class="fas fa-home me-1"></i>Home
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/history">
+                            <i class="fas fa-history me-1"></i>History
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/draft-editor">
+                            <i class="fas fa-edit me-1"></i>Draft Editor
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Loading Overlay -->
+    <div class="loading" id="loading">
+        <div class="loading-content">
+            <div class="spinner-border" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+            <p class="mt-3">Processing...</p>
+        </div>
+    </div>
+
+    <div class="container py-5">
+        <div class="main-container p-4">
+            <div class="text-center mb-4">
+                <h1 class="display-4 fw-bold text-primary">
+                    <i class="fas fa-edit me-3"></i>
+                    Draft Editor
+                </h1>
+                <p class="lead text-muted">Edit and customize your email templates</p>
+            </div>
+
+            <!-- File Selection Section -->
+            <div id="fileSelectionSection">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="file-selector" onclick="document.getElementById('fileInput').click()">
+                            <i class="fas fa-file-text fa-3x text-primary mb-3"></i>
+                            <h5>Load Existing Template</h5>
+                            <p class="text-muted">Click to browse or drag & drop a .txt file</p>
+                            <input type="file" id="fileInput" accept=".txt" style="display: none;" onchange="loadDraftFile(this)">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="file-selector" onclick="createNewDraft()" style="cursor: pointer;">
+                            <i class="fas fa-plus fa-3x text-success mb-3"></i>
+                            <h5>Create New Template</h5>
+                            <p class="text-muted">Start with a blank template</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="text-center mt-4">
+                    <div class="alert alert-info">
+                        <h6><i class="fas fa-info-circle me-2"></i>Getting Started:</h6>
+                        <p class="mb-0">Choose an option above to begin editing your email template. You can either load an existing template file or create a new one from scratch.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Editor Section -->
+            <div id="editorSection" class="editor-container">
+                <div class="file-info" id="fileInfo">
+                    <h6><i class="fas fa-file-text me-2"></i>Editing: <span id="currentFileName">Untitled</span></h6>
+                </div>
+
+                <div class="subject-editor">
+                    <label class="form-label fw-bold">Subject Line:</label>
+                    <textarea id="subjectEditor" placeholder="Enter email subject line..." oninput="updatePreview()"></textarea>
+                </div>
+
+                <div class="body-editor">
+                    <label class="form-label fw-bold">Email Body:</label>
+                    <textarea id="bodyEditor" class="form-control" style="min-height: 350px; font-family: monospace; font-size: 14px;" placeholder="Paste or edit your HTML email body here..."></textarea>
+                </div>
+
+                <div class="preview-container">
+                    <h6 class="mb-3"><i class="fas fa-eye me-2"></i>Preview:</h6>
+                    <div id="emailPreview">
+                        <p class="text-muted">Preview will appear here as you type...</p>
+                    </div>
+                </div>
+
+                <div class="btn-group-actions">
+                    <button class="btn btn-primary" onclick="saveDraft()">
+                        <i class="fas fa-save me-2"></i>Save as TXT
+                    </button>
+                    <button class="btn btn-secondary" onclick="resetEditor()">
+                        <i class="fas fa-undo me-2"></i>Reset
+                    </button>
+                    <button class="btn btn-outline-secondary" onclick="backToFileSelection()">
+                        <i class="fas fa-arrow-left me-2"></i>Back to File Selection
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Link Insertion Modal -->
+    <div class="modal fade" id="linkModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Insert Link</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="linkUrl" class="form-label">URL:</label>
+                        <input type="url" class="form-control" id="linkUrl" placeholder="https://example.com">
+                    </div>
+                    <div class="mb-3">
+                        <label for="linkText" class="form-label">Link Text (optional):</label>
+                        <input type="text" class="form-control" id="linkText" placeholder="Click here">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" onclick="insertLink()">Insert Link</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        let currentFile = null;
+        let originalContent = null;
+
+        // Initialize the editor
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set up drag and drop functionality
+            setupDragAndDrop();
+        });
+
+        function showLoading() {
+            document.getElementById('loading').style.display = 'flex';
+        }
+
+        function hideLoading() {
+            document.getElementById('loading').style.display = 'none';
+        }
+
+        function loadDraftFile(input) {
+            const file = input.files[0];
+            if (!file) return;
+
+            showLoading();
+            const reader = new FileReader();
+            
+            reader.onload = function(e) {
+                try {
+                    const content = e.target.result;
+                    parseDraftContent(content);
+                    currentFile = file;
+                    originalContent = content;
+                    document.getElementById('currentFileName').textContent = file.name;
+                    showEditor();
+                    hideLoading();
+                } catch (error) {
+                    hideLoading();
+                    alert('Error loading file: ' + error.message);
+                }
+            };
+            
+            reader.readAsText(file);
+        }
+
+        function parseDraftContent(content) {
+            // Parse the draft template format (subject: ... body: ...)
+            let subject = '';
+            let body = '';
+            
+            if (content.includes('subject:') && content.includes('body:')) {
+                const parts = content.split('body:', 2);
+                subject = parts[0].replace('subject:', '').trim();
+                body = parts[1].trim();
+            } else {
+                // If no clear format, treat as body only
+                body = content.trim();
+            }
+            
+            document.getElementById('subjectEditor').value = subject;
+            document.getElementById('bodyEditor').value = body;
+            updatePreview();
+        }
+        
+        function cleanHtmlForEditing(html) {
+            // Convert complex HTML to simpler format for editing
+            let cleaned = html
+                .replace(/<p[^>]*>/g, '')  // Remove paragraph opening tags
+                .replace(/<\/p>/g, '<br>')  // Replace paragraph closing tags with line breaks
+                .replace(/<br\s*\/?>/g, '<br>')  // Normalize line breaks
+                .replace(/<ul[^>]*>/g, '')  // Remove ul opening tags
+                .replace(/<\/ul>/g, '')  // Remove ul closing tags
+                .replace(/<li[^>]*>/g, '• ')  // Convert list items to bullet points
+                .replace(/<\/li>/g, '<br>')  // Add line breaks after list items
+                .replace(/<div[^>]*>/g, '')  // Remove div opening tags
+                .replace(/<\/div>/g, '<br>')  // Replace div closing tags with line breaks
+                .replace(/<span[^>]*>/g, '')  // Remove span opening tags
+                .replace(/<\/span>/g, '')  // Remove span closing tags
+                .replace(/style="[^"]*"/g, '')  // Remove style attributes
+                .replace(/class="[^"]*"/g, '')  // Remove class attributes
+                .replace(/<wbr>/g, '')  // Remove word break tags
+                .replace(/&amp;/g, '&')  // Convert HTML entities
+                .replace(/&lt;/g, '<')
+                .replace(/&gt;/g, '>')
+                .replace(/&quot;/g, '"')
+                .replace(/&#39;/g, "'");
+            
+            return cleaned;
+        }
+
+        function createNewDraft() {
+            currentFile = null;
+            originalContent = null;
+            document.getElementById('currentFileName').textContent = 'New Draft';
+            document.getElementById('subjectEditor').value = '';
+            document.getElementById('bodyEditor').value = '';
+            updatePreview();
+            showEditor();
+        }
+
+        function showEditor() {
+            document.getElementById('fileSelectionSection').style.display = 'none';
+            document.getElementById('editorSection').classList.add('active');
+            
+            // Ensure the editor is properly initialized
+            setTimeout(() => {
+                const bodyEditor = document.getElementById('bodyEditor');
+                
+                // Make sure contenteditable is enabled
+                // bodyEditor.contentEditable = 'true'; // This line is no longer needed for a textarea
+                bodyEditor.focus();
+                
+                // Set cursor at the end if there's content
+                if (bodyEditor.value && bodyEditor.value.trim()) {
+                    const range = document.createRange();
+                    const selection = window.getSelection();
+                    range.selectNodeContents(bodyEditor);
+                    range.collapse(false);
+                    selection.removeAllRanges();
+                    selection.addRange(range);
+                }
+                
+                // Add a test click handler to ensure it's working
+                // bodyEditor.addEventListener('click', function() { // This line is no longer needed for a textarea
+                //     this.focus();
+                // }, { once: true });
+            }, 100);
+        }
+
+        function backToFileSelection() {
+            document.getElementById('fileSelectionSection').style.display = 'block';
+            document.getElementById('editorSection').classList.remove('active');
+            document.getElementById('fileInput').value = '';
+            currentFile = null;
+            originalContent = null;
+        }
+
+        function updatePreview() {
+            const subject = document.getElementById('subjectEditor').value;
+            const body = document.getElementById('bodyEditor').value;
+            
+            // Handle placeholder visibility
+            // const bodyEditor = document.getElementById('bodyEditor'); // This line is no longer needed for a textarea
+            // if (body && body.trim()) { // This line is no longer needed for a textarea
+            //     bodyEditor.classList.remove('empty'); // This line is no longer needed for a textarea
+            // } else { // This line is no longer needed for a textarea
+            //     bodyEditor.classList.add('empty'); // This line is no longer needed for a textarea
+            // }
+            
+            let previewHtml = '';
+            if (subject) {
+                previewHtml += `<div style="margin-bottom: 15px;"><strong>Subject:</strong> ${subject}</div>`;
+            }
+            if (body && body.trim()) {
+                // Convert simple HTML back to proper email format for preview
+                // const formattedBody = formatHtmlForPreview(body); // This line is no longer needed for a textarea
+                previewHtml += `<div style="border: 1px solid #dee2e6; padding: 15px; background: white; border-radius: 5px; font-family: 'Times New Roman', serif; line-height: 1.6;">${body}</div>`;
+            }
+            
+            if (!previewHtml) {
+                previewHtml = '<p class="text-muted">Preview will appear here as you type...</p>';
+            }
+            
+            document.getElementById('emailPreview').innerHTML = previewHtml;
+        }
+        
+        function formatHtmlForPreview(html) {
+            // Convert simple HTML to proper email format for preview
+            let formatted = html
+                .replace(/<br>/g, '</p><p style="font-size:12pt;font-family:\'Times New Roman\',serif;color:#000;background-color:transparent;margin:0 0 18px 0;">')
+                .replace(/^/, '<p style="font-size:12pt;font-family:\'Times New Roman\',serif;color:#000;background-color:transparent;margin:0 0 18px 0;">')
+                .replace(/$/, '</p>')
+                .replace(/• /g, '<li style="margin-bottom:2px;">')
+                .replace(/<li style="margin-bottom:2px;">([^<]*)<br>/g, '<li style="margin-bottom:2px;">$1</li>');
+            
+            // Add the colored divider at the end
+            formatted += `
+            <div style="margin:18px 0 10px 0;">
+                <span style="font-size:12pt;font-family:'Times New Roman',serif;color:rgb(241,194,50);background-color:transparent;font-weight:700;">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</span>
+                <span style="font-size:12pt;font-family:'Times New Roman',serif;color:rgb(253,175,23);background-color:transparent;font-weight:700;">▄▄</span>
+                <span style="font-size:12pt;font-family:'Times New Roman',serif;color:rgb(117,195,233);background-color:transparent;font-weight:700;">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</span>
+                <span style="font-size:12pt;font-family:'Times New Roman',serif;color:rgb(237,27,36);background-color:transparent;font-weight:700;">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</span>
+            </div>
+            <p style="font-size:12pt;font-family:'Times New Roman',serif;color:#222;background-color:transparent;font-weight:bold;margin:0;">Birla Institute of Technology &amp; Science, Pilani</p>
+            <p style="font-size:12pt;font-family:'Times New Roman',serif;color:#222;background-color:transparent;margin:0;">Pilani Campus, Rajasthan - 333 031, India</p>`;
+            
+            return formatted;
+        }
+
+        function saveDraft() {
+            const subject = document.getElementById('subjectEditor').value;
+            const body = document.getElementById('bodyEditor').value;
+            
+            if (!subject && !body) {
+                alert('Please enter some content before saving.');
+                return;
+            }
+            
+            // Convert the edited content back to proper HTML format
+            // const formattedBody = formatHtmlForSaving(body); // This line is no longer needed for a textarea
+            
+            // Create the draft content in the expected format
+            let content = '';
+            if (subject) {
+                content += `subject: ${subject}\n\n`;
+            }
+            content += `body:\n${body}`;
+            
+            // Create and download the file
+            const blob = new Blob([content], { type: 'text/plain' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = currentFile ? currentFile.name : 'draft_template.txt';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+            
+            alert('Draft saved successfully!');
+        }
+        
+        function formatHtmlForSaving(html) {
+            // Convert simple HTML back to proper email format
+            let formatted = html
+                .replace(/<br>/g, '</p>\n<p style="font-size:12pt;font-family:\'Times New Roman\',serif;color:#000;background-color:transparent;margin:0 0 18px 0;">')  // Convert line breaks to paragraphs
+                .replace(/^/, '<p style="font-size:12pt;font-family:\'Times New Roman\',serif;color:#000;background-color:transparent;margin:0 0 18px 0;">')  // Add opening paragraph tag
+                .replace(/$/, '</p>')  // Add closing paragraph tag
+                .replace(/• /g, '<li style="margin-bottom:2px;">')  // Convert bullet points back to list items
+                .replace(/<li style="margin-bottom:2px;">([^<]*)<br>/g, '<li style="margin-bottom:2px;">$1</li>');  // Close list items
+            
+            return formatted;
+        }
+
+        function resetEditor() {
+            if (originalContent) {
+                parseDraftContent(originalContent);
+            } else {
+                document.getElementById('subjectEditor').value = '';
+                document.getElementById('bodyEditor').value = '';
+                updatePreview();
+            }
+        }
+
+        // Rich text editor functions
+        function formatText(command) {
+            document.execCommand(command, false, null);
+            updatePreview();
+        }
+
+        function showLinkModal() {
+            document.getElementById('linkUrl').value = '';
+            document.getElementById('linkText').value = '';
+            new bootstrap.Modal(document.getElementById('linkModal')).show();
+        }
+
+        function insertLink() {
+            const url = document.getElementById('linkUrl').value;
+            const linkText = document.getElementById('linkText').value;
+            
+            if (url) {
+                const text = linkText || url;
+                document.execCommand('insertHTML', false, `<a href="${url}" style="color:#1976d2; text-decoration: underline; font-weight: bold;">${text}</a>`);
+                updatePreview();
+                bootstrap.Modal.getInstance(document.getElementById('linkModal')).hide();
+            }
+        }
+
+        function insertPlaceholder(placeholder) {
+            if (placeholder) {
+                document.execCommand('insertText', false, placeholder);
+                updatePreview();
+            }
+        }
+
+        function clearFormatting() {
+            document.execCommand('removeFormat', false, null);
+            updatePreview();
+        }
+        
+        function handleKeyDown(event) {
+            // Handle Enter key to create new lines
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                document.execCommand('insertLineBreak', false, null);
+                updatePreview();
+            }
+        }
+        
+        function testEditor() {
+            const bodyEditor = document.getElementById('bodyEditor');
+            alert('Editor contentEditable: ' + bodyEditor.contentEditable + '\n' +
+                  'Editor innerHTML length: ' + bodyEditor.innerHTML.length + '\n' +
+                  'Editor is focused: ' + (document.activeElement === bodyEditor));
+            
+            // Try to insert some text
+            bodyEditor.focus();
+            document.execCommand('insertText', false, 'TEST TEXT ');
+            updatePreview();
+        }
+
+        function setupDragAndDrop() {
+            // Drag and drop functionality
+            const fileSelectors = document.querySelectorAll('.file-selector');
+            
+            fileSelectors.forEach(fileSelector => {
+                fileSelector.addEventListener('dragover', function(e) {
+                    e.preventDefault();
+                    fileSelector.style.borderColor = '#0056b3';
+                    fileSelector.style.backgroundColor = 'rgba(0, 123, 255, 0.05)';
+                });
+                
+                fileSelector.addEventListener('dragleave', function(e) {
+                    e.preventDefault();
+                    fileSelector.style.borderColor = '#007bff';
+                    fileSelector.style.backgroundColor = 'transparent';
+                });
+                
+                fileSelector.addEventListener('drop', function(e) {
+                    e.preventDefault();
+                    fileSelector.style.borderColor = '#007bff';
+                    fileSelector.style.backgroundColor = 'transparent';
+                    
+                    const files = e.dataTransfer.files;
+                    if (files.length > 0) {
+                        const file = files[0];
+                        if (file.type === 'text/plain' || file.name.endsWith('.txt')) {
+                            const input = document.getElementById('fileInput');
+                            input.files = files;
+                            loadDraftFile(input);
+                        } else {
+                            alert('Please select a .txt file.');
+                        }
+                    }
+                });
+            });
+        }
+    </script>
+</body>
+</html> 
