@@ -75,3 +75,5 @@ Pipfile.lock
 
 token.json
 credentials.json
+
+certs/
