@@ -462,7 +462,7 @@ def send_emails():
                     "gmail_thread_id": thread_id
                 }
                 try:
-                    resp = requests.post("http://localhost:8000/api/crm/contacts/", json=crm_data, timeout=5)
+                    resp = requests.post("https://crm.srijansahay05.in/api/crm/contacts/", json=crm_data, timeout=5)
                 except Exception as api_err:
                     results.append({
                         "email": recipient_email,
@@ -545,7 +545,7 @@ def dashboard():
         flash(f'Error fetching user email: {str(e)}', 'danger')
         return render_template('dashboard.html', contacts=contacts, user_email=user_email)
     try:
-        resp = requests.get('http://localhost:8000/api/crm/contacts/list/', params={'user_email': user_email}, timeout=5)
+        resp = requests.get('https://crm.srijansahay05.in/api/crm/contacts/list/', params={'user_email': user_email}, timeout=5)
         contacts = resp.json() if resp.status_code == 200 else []
     except Exception as e:
         contacts = []
