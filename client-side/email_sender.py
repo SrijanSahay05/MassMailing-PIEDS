@@ -5,7 +5,7 @@ from googleapiclient.errors import HttpError
 from google_authentication import get_gmail_service
 
 
-def send_email(service, recipient_email, recipient_name, subject, body_text, is_html=False, index=None, total=None):
+def send_email(service, recipient_email, recipient_name, subject, body_text, is_html=False, cc_emails=None, index=None, total=None):
     """
     Creates and sends an email to a specific recipient.
 
@@ -16,6 +16,7 @@ def send_email(service, recipient_email, recipient_name, subject, body_text, is_
         subject: The subject line of the email.
         body_text: The content of the email body (plain text or HTML).
         is_html: If True, send as HTML. Otherwise, send as plain text.
+        cc_emails: (optional) List of email addresses to CC. Can be a string or list of strings.
         index: (optional) The current email number in the batch.
         total: (optional) The total number of emails in the batch.
 
@@ -30,6 +31,17 @@ def send_email(service, recipient_email, recipient_name, subject, body_text, is_
         message["to"] = f"{recipient_name} <{recipient_email}>"
         message["from"] = f"PIEDS-ST Mail Merge <{sender_email}>"
         message["subject"] = subject
+        
+        # Add CC recipients if provided
+        if cc_emails:
+            if isinstance(cc_emails, str):
+                # Single CC email as string
+                message["cc"] = cc_emails
+            elif isinstance(cc_emails, list):
+                # Multiple CC emails as list
+                message["cc"] = ", ".join(cc_emails)
+            else:
+                print(f"Warning: Invalid cc_emails type. Expected string or list, got {type(cc_emails)}")
 
         encoded_message = base64.urlsafe_b64encode(message.as_bytes()).decode()
 

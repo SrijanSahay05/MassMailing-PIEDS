@@ -41,8 +41,9 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="mb-3">
-                                <label for="campaignName" class="form-label">Campaign Name (Optional)</label>
-                                <input type="text" class="form-control" id="campaignName" placeholder="Enter campaign name">
+                                <label for="ccEmails" class="form-label">CC Email Addresses (Optional)</label>
+                                <input type="text" class="form-control" id="ccEmails" placeholder="Enter CC emails separated by commas (e.g., cc1@example.com, cc2@example.com)">
+                                <div class="form-text">You can enter multiple CC email addresses separated by commas</div>
                             </div>
                             <div class="mb-3">
                                 <label for="emailCol" class="form-label">Email Address Column</label>
@@ -371,6 +372,18 @@ function loadPage(page) {
 }
 function sendEmails() {
     if (!confirm(`Are you sure you want to send ${currentData.total_rows} emails?`)) return;
+    
+    // Get CC emails and process them
+    const ccEmailsInput = document.getElementById('ccEmails').value.trim();
+    let ccEmails = null;
+    if (ccEmailsInput) {
+        // Split by comma and clean up whitespace
+        ccEmails = ccEmailsInput.split(',').map(email => email.trim()).filter(email => email);
+        if (ccEmails.length === 0) {
+            ccEmails = null;
+        }
+    }
+    
     const data = {
         filename: currentFile,
         email_col: document.getElementById('emailCol').value,
@@ -378,7 +391,8 @@ function sendEmails() {
         designation_col: document.getElementById('designationCol').value,
         company_col: document.getElementById('companyCol').value,
         template_path: document.getElementById('templateSelect').value,
-        campaign_name: document.getElementById('campaignName').value || `Campaign ${new Date().toLocaleString()}`
+        cc: ccEmails,
+        campaign_name: `Campaign ${new Date().toLocaleString()}`
     };
     fetch('/send', {
         method: 'POST',
@@ -470,7 +484,7 @@ function goToHome() {
 }
 function startNewCampaign() {
     document.getElementById('fileInput').value = '';
-    document.getElementById('campaignName').value = '';
+    document.getElementById('ccEmails').value = '';
     currentFile = null;
     currentData = null;
     currentEmails = [];

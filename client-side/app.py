@@ -365,9 +365,7 @@ def send_emails():
         designation_col = data.get("designation_col", "designation")
         company_col = data.get("company_col", "company name")
         template_path = data.get("template_path", "draft_template.txt")
-        campaign_name = data.get(
-            "campaign_name", f"Campaign {datetime.now().strftime('%Y-%m-%d %H:%M')}"
-        )
+        cc = data.get("cc")
 
         if not filename:
             return jsonify({"success": False, "error": "No filename provided"})
@@ -463,6 +461,7 @@ def send_emails():
                     subject,
                     body,
                     is_html=True,
+                    cc_emails=cc,
                     index=idx+1,
                     total=total_to_send
                 )
