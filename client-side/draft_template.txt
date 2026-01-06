@@ -1,48 +1,63 @@
-subject: Join IGNITE 2025 <> BITS Pilani’s Startup Sprint
-
+subject: Join Ignite '25 | BITS Pilani's Startup Bootcamp 
 body:
 <p style="font-size:12pt;font-family:'Times New Roman',serif;color:#000;background-color:transparent;margin:0 0 18px 0;">Dear {poc_name},</p>
 
 <p style="font-size:12pt;font-family:'Times New Roman',serif;color:#000;background-color:transparent;margin:0 0 18px 0;">
-I’m Harshit from <b>PIEDS</b>, the startup incubator at <b>BITS Pilani</b>. I’m reaching out to invite <b>{company}</b> to partner with us for IGNITE 2025 - our flagship 6-day startup innovation sprint happening this September.
+I hope you're doing well.
 </p>
 
 <p style="font-size:12pt;font-family:'Times New Roman',serif;color:#000;background-color:transparent;margin:0 0 18px 0;">
-Inspired by Y Combinator’s Startup School, IGNITE is designed to help ambitious innovators go from <b>raw idea to MVP in under a week</b> through intensive building, mentorship, and investor feedback.
+I'm reaching out on behalf of <b>PIEDS</b>, the startup incubator at <b>BITS Pilani</b>, to invite <b>{company}</b> to join us as an official sponsor for <b>IGNITE 2025</b>: a high-impact 6-day founders' bootcamp happening this September at the BITS Pilani Goa Campus.
 </p>
 
-<p style="font-size:12pt;font-family:'Times New Roman',serif;color:#000;background-color:transparent;margin:0 0 10px 0;">The highlights of IGNITE 2024:</p>
+<p style="font-size:12pt;font-family:'Times New Roman',serif;color:#000;background-color:transparent;margin:0 0 18px 0;">
+IGNITE 2025 is where bold ideas become fundable ventures. The program enables 100 handpicked innovators to rapidly build MVPs with the help of mentors, operators, and investors.
+</p>
+
+<p style="font-size:12pt;font-family:'Times New Roman',serif;color:#000;background-color:transparent;margin:0 0 10px 0;"><b>Last year, IGNITE 2024 saw:</b></p>
 <ul style="font-size:12pt;font-family:'Times New Roman',serif;color:#000;background-color:transparent;margin:0 0 18px 0;padding-left:0;list-style-type:none;">
-    <li style="margin-bottom:2px;"><b>– 1,000+ applications</b> | 15+ startups selected</li>
-    <li style="margin-bottom:2px;"><b>– 100+ investors present | $200K+</b> in tech credits awarded</li>
-    <li style="margin-bottom:2px;"><b>– Alchemyst AI</b> raised <b>$300K</b> post-event</li>
-    <li style="margin-bottom:2px;">– Ambiator was on boarded by <b>Sustainability Mafia</b></li>
-    <li style="margin-bottom:2px;">– Coverage in <b>Indian Express, Inc42</b> | <b>30K+ LinkedIn impressions</b></li>
+    <li style="margin-bottom:2px;">– <b>1,000+ applications</b> | 15 startups selected</li>
+    <li style="margin-bottom:2px;">– <b>100+ investors</b> present | <b>$200K+</b> in credits distributed</li>
+    <li style="margin-bottom:2px;">– <b>$300K raised</b> by Alchemyst AI post-event</li>
+    <li style="margin-bottom:2px;">– Coverage in <b>Indian Express, Startup Magazine UK</b> and many others | <b>70K+ online impressions</b></li>
+</ul>
+
+<p style="font-size:12pt;font-family:'Times New Roman',serif;color:#000;background-color:transparent;margin:0 0 10px 0;"><b>Why partner with us:</b></p>
+<ul style="font-size:12pt;font-family:'Times New Roman',serif;color:#000;background-color:transparent;margin:0 0 18px 0;padding-left:20px;">
+    <li style="margin-bottom:5px;">Showcase your leadership in supporting financial inclusion & innovation</li>
+    <li style="margin-bottom:5px;">Engage directly with emerging founders and digital-first businesses</li>
+    <li style="margin-bottom:5px;">Position <b>{company}</b> as the go-to platform for startup-friendly banking, credit & financial services</li>
+    <li style="margin-bottom:5px;">Extensive branding and media coverage along with Ignite</li>
+    <li style="margin-bottom:5px;">Access to top student startup ecosystem, positioning you at the forefront of cutting-edge ventures and amplifying your presence across our 200,000+ strong alumni and founder network</li>
 </ul>
 
 <p style="font-size:12pt;font-family:'Times New Roman',serif;color:#000;background-color:transparent;margin:0 0 18px 0;">
-PIEDS has incubated ventures like <b>Nawgati, Jarsh safety(all featured on Shark tank), Alt Carbon</b> (supported by Shastra VC), and others - with several securing follow-on funding, grants, and cohort selections across India and abroad.
+PIEDS has incubated ventures like <b>Alchemyst AI, Airth, Ambiator, and Sarvvid AI</b> many of which have secured VC funding and entered leading accelerator cohorts.
 </p>
 
 <p style="font-size:12pt;font-family:'Times New Roman',serif;color:#000;background-color:transparent;margin:0 0 18px 0;">
-Additionally, PIEDS is eligible to receive CSR (Corporate Social Responsibility) funds, offering <b>{company}</b> a meaningful opportunity to collaborate with one of India’s leading student innovation hubs; amplifying stories of young changemakers, supporting entrepreneurship, and advancing your CSR goals in education and innovation.
+We'd be happy to explore a custom partnership aligned with your innovation and CSR objectives.
 </p>
 
 <p style="font-size:12pt;font-family:'Times New Roman',serif;color:#000;background-color:transparent;margin:0 0 18px 0;">
-Please find our brochure and aftermovie here: <a href="https://c86b6af9.streaklinks.com/Cgv3Kf7UVNY8LOQ9SAukDmdv/https%3A%2F%2Fdrive.google.com%2Ffile%2Fd%2F1ecWpmSb7080g9Rwe7dMOhbqiyT6SD4Mh%2Fview%3Fusp%3Ddrive_link" style="color:#1976d2; text-decoration: underline; font-weight: bold;">Brochure Link</a> | <a href="https://c86b6af9.streaklinks.com/Cgv3Kf37O9cdeidVXgfG_K6T/https%3A%2F%2Fdrive.google.com%2Ffile%2Fd%2F1enwXPsbPNg1xjLolb6_rbj4AVMH1-kA0%2Fview%3Fusp%3Ddrive_link" style="color:#1976d2; text-decoration: underline; font-weight: bold;">Aftermovie Link</a>
+Detailed sponsorship benefits and deliverables: <a href="https://docs.google.com/spreadsheets/d/1jdWOo0_SfbCWfib2ihOr0rLnwPD6xY5P4UdC0kaTMnE/edit?gid=0#gid=0" style="color:#1976d2; text-decoration: underline; font-weight: bold;">Ignite 2025 - Deliverables</a>
 </p>
 
-<p style="font-size:12pt;font-family:'Times New Roman',serif;color:#000;background-color:transparent;margin:0 0 18px 0;font-weight:bold;">
+<p style="font-size:12pt;font-family:'Times New Roman',serif;color:#000;background-color:transparent;margin:0 0 18px 0;">
+Please find our brochure and guest-list here: <a href="https://drive.google.com/file/d/1hVI85l0bbxXCx9ClID9zAL2-L8Rq9p7a/view" style="color:#1976d2; text-decoration: underline; font-weight: bold;">Brochure Link</a> | <a href="https://drive.google.com/file/d/1Y8aop4d6nlTzsmkvUoorRL83AQB21VIH/view" style="color:#1976d2; text-decoration: underline; font-weight: bold;">Guest List</a>
+</p>
+
+<p style="font-size:12pt;font-family:'Times New Roman',serif;color:#000;background-color:transparent;margin:0 0 18px 0;">
 Could we schedule a call to discuss potential collaboration? Looking forward to your response.
 </p>
 
 <p style="font-size:12pt;font-family:'Times New Roman',serif;color:#888;background-color:transparent;margin:0 0 2px 0;font-style:italic;font-weight:bold;">Best Regards,</p>
-<p style="font-size:12pt;font-family:'Times New Roman',serif;color:#000;background-color:transparent;margin:0 0 2px 0;font-weight:bold;">Harshit Saini</p>
-<p style="font-size:12pt;font-family:'Times New Roman',serif;color:#000;background-color:transparent;margin:0 0 2px 0;font-weight:bold;">Partnerships Associate</p>
+<p style="font-size:12pt;font-family:'Times New Roman',serif;color:#000;background-color:transparent;margin:0 0 2px 0;font-weight:bold;">Srijan Sahay</p>
+<p style="font-size:12pt;font-family:'Times New Roman',serif;color:#000;background-color:transparent;margin:0 0 2px 0;font-weight:bold;">Partnership & Sponsorship Associate</p>
 <p style="font-size:12pt;font-family:'Times New Roman',serif;color:#000;background-color:transparent;margin:0 0 2px 0;">PIEDS Student Team</p>
-<p style="font-size:12pt;font-family:'Times New Roman',serif;color:#000;background-color:transparent;margin:0 0 2px 0;">E-Mail: <a href="mailto:harshit.saini@example.com" style="color:#1976d2; text-decoration: underline; font-weight: bold;">Personal E-mail</a> | <a href="mailto:f20210000@pilani.bits-pilani.ac.in" style="color:#1976d2; text-decoration: underline; font-weight: bold;">University E-mail</a></p>
-<p style="font-size:12pt;font-family:'Times New Roman',serif;color:#000;background-color:transparent;margin:0 0 2px 0;">LinkedIn Profile: <a href="https://www.linkedin.com/in/harshit-saini/" style="color:#1976d2; text-decoration: underline; font-weight: bold;">Harshit Saini</a></p>
-<p style="font-size:12pt;font-family:'Times New Roman',serif;color:#222;background-color:transparent;margin:0 0 2px 0;font-weight:bold;">Phone: +91 7425014966</p>
+<p style="font-size:12pt;font-family:'Times New Roman',serif;color:#000;background-color:transparent;margin:0 0 2px 0;">E-Mail: <a href="mailto:srijan05sahay@gmail.com" style="color:#1976d2; text-decoration: underline; font-weight: bold;">Personal E-mail</a> | <a href="mailto:f20240829@pilani.bits-pilani.ac.in" style="color:#1976d2; text-decoration: underline; font-weight: bold;">University E-mail</a></p>
+<p style="font-size:12pt;font-family:'Times New Roman',serif;color:#000;background-color:transparent;margin:0 0 2px 0;">LinkedIn Profile: <a href="https://www.linkedin.com/in/srijansahay05/" style="color:#1976d2; text-decoration: underline; font-weight: bold;">Srijan Sahay</a></p>
+<p style="font-size:12pt;font-family:'Times New Roman',serif;color:#222;background-color:transparent;margin:0 0 2px 0;font-weight:bold;">Phone: +91 8271699444</p>
 
 <div style="margin:18px 0 10px 0;">
 <span style="font-size:12pt;font-family:&quot;Times New Roman&quot;,serif;color:rgb(241,194,50);background-color:transparent;font-weight:700;font-variant-numeric:normal;font-variant-east-asian:normal;font-variant-alternates:normal;vertical-align:baseline">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</span><span style="font-size:12pt;font-family:&quot;Times New Roman&quot;,serif;color:rgb(253,175,23);background-color:transparent;font-weight:700;font-variant-numeric:normal;font-variant-east-asian:normal;font-variant-alternates:normal;vertical-align:baseline">▄▄</span><span style="font-size:12pt;font-family:&quot;Times New Roman&quot;,serif;color:rgb(117,195,233);background-color:transparent;font-weight:700;font-variant-numeric:normal;font-variant-east-asian:normal;font-variant-alternates:normal;vertical-align:baseline">▄▄▄▄▄▄▄▄▄▄▄▄<wbr>▄▄▄▄▄▄▄▄</span><span style="font-size:12pt;font-family:&quot;Times New Roman&quot;,serif;color:rgb(237,27,36);background-color:transparent;font-weight:700;font-variant-numeric:normal;font-variant-east-asian:normal;font-variant-alternates:normal;vertical-align:baseline">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</span>
