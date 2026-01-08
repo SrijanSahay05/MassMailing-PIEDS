@@ -1,0 +1,64 @@
+subject: Partner with BITS Pilani at IGNITE 2025 – Powering the Next Wave of Founders
+body:
+<p style="font-size:12pt;font-family:'Times New Roman',serif;color:#000;background-color:transparent;margin:0 0 18px 0;">Dear {poc_name},</p>
+
+<p style="font-size:12pt;font-family:'Times New Roman',serif;color:#000;background-color:transparent;margin:0 0 18px 0;">
+I hope you're doing well.
+</p>
+
+<p style="font-size:12pt;font-family:'Times New Roman',serif;color:#000;background-color:transparent;margin:0 0 18px 0;">
+I'm reaching out on behalf of <b>PIEDS</b>, the startup incubator at <b>BITS Pilani</b>, to invite <b>{company}</b> to join us as an official sponsor for <b>IGNITE 2025</b>: a high-impact 6-day entrepreneurship sprint happening this September at the BITS Pilani Goa Campus.
+</p>
+
+<p style="font-size:12pt;font-family:'Times New Roman',serif;color:#000;background-color:transparent;margin:0 0 18px 0;">
+IGNITE 2025 is where bold ideas become fundable ventures. Designed on the lines of YC's Startup School, the program enables 100 handpicked innovators to rapidly build MVPs with the help of mentors, operators, and investors.
+</p>
+
+<p style="font-size:12pt;font-family:'Times New Roman',serif;color:#000;background-color:transparent;margin:0 0 10px 0;"><b>Last year, IGNITE 2024 saw:</b></p>
+<ul style="font-size:12pt;font-family:'Times New Roman',serif;color:#000;background-color:transparent;margin:0 0 18px 0;padding-left:0;list-style-type:none;">
+    <li style="margin-bottom:2px;">– <b>1,000+ applications</b> | 15 startups selected</li>
+    <li style="margin-bottom:2px;">– <b>100+ investors</b> present | <b>$200K+</b> in credits distributed</li>
+    <li style="margin-bottom:2px;">– <b>$300K raised</b> by Alchemyst AI post-event</li>
+    <li style="margin-bottom:2px;">– Coverage in <b>Indian Express, Startup Magazine UK</b> and many others | <b>70K+ online impressions</b></li>
+</ul>
+
+<p style="font-size:12pt;font-family:'Times New Roman',serif;color:#000;background-color:transparent;margin:0 0 10px 0;"><b>Why partner with us:</b></p>
+<ul style="font-size:12pt;font-family:'Times New Roman',serif;color:#000;background-color:transparent;margin:0 0 18px 0;padding-left:20px;">
+    <li style="margin-bottom:5px;">Showcase your leadership in supporting financial inclusion & innovation</li>
+    <li style="margin-bottom:5px;">Engage directly with emerging founders and digital-first businesses</li>
+    <li style="margin-bottom:5px;">Position <b>{company}</b> as the go-to platform for startup-friendly banking, credit & financial services</li>
+    <li style="margin-bottom:5px;">Extensive branding and media coverage along with Ignite</li>
+    <li style="margin-bottom:5px;">Access to top student startup ecosystem, positioning you at the forefront of cutting-edge ventures and amplifying your presence across our 200,000+ strong alumni and founder network</li>
+</ul>
+
+<p style="font-size:12pt;font-family:'Times New Roman',serif;color:#000;background-color:transparent;margin:0 0 18px 0;">
+PIEDS has incubated ventures like <b>Alchemyst AI, Airth, Ambiator, and Sarvvid AI</b> many of which have secured VC funding and entered leading accelerator cohorts.
+</p>
+
+<p style="font-size:12pt;font-family:'Times New Roman',serif;color:#000;background-color:transparent;margin:0 0 18px 0;">
+We'd be happy to explore a custom partnership aligned with your innovation and CSR objectives.
+</p>
+
+<p style="font-size:12pt;font-family:'Times New Roman',serif;color:#000;background-color:transparent;margin:0 0 18px 0;">
+Detailed sponsorship benefits and deliverables: <a href="https://docs.google.com/spreadsheets/d/1jdWOo0_SfbCWfib2ihOr0rLnwPD6xY5P4UdC0kaTMnE/edit?gid=0#gid=0" style="color:#1976d2; text-decoration: underline; font-weight: bold;">Ignite 2025 - Deliverables</a>
+</p>
+
+<p style="font-size:12pt;font-family:'Times New Roman',serif;color:#000;background-color:transparent;margin:0 0 18px 0;">
+Please find our brochure and guest-list here: <a href="https://drive.google.com/file/d/1hVI85l0bbxXCx9ClID9zAL2-L8Rq9p7a/view" style="color:#1976d2; text-decoration: underline; font-weight: bold;">Brochure Link</a> | <a href="https://drive.google.com/file/d/1Y8aop4d6nlTzsmkvUoorRL83AQB21VIH/view" style="color:#1976d2; text-decoration: underline; font-weight: bold;">Guest List</a>
+</p>
+
+
+<p style="font-size:12pt;font-family:'Times New Roman',serif;color:#888;background-color:transparent;margin:0 0 2px 0;font-style:italic;font-weight:bold;">Best Regards,</p>
+<p style="font-size:12pt;font-family:'Times New Roman',serif;color:#000;background-color:transparent;margin:0 0 2px 0;font-weight:bold;">Krrish Narayan</p>
+<p style="font-size:12pt;font-family:'Times New Roman',serif;color:#000;background-color:transparent;margin:0 0 2px 0;font-weight:bold;">Partnership Associate</p>
+<p style="font-size:12pt;font-family:'Times New Roman',serif;color:#000;background-color:transparent;margin:0 0 2px 0;">PIEDS Student Team</p>
+<p style="font-size:12pt;font-family:'Times New Roman',serif;color:#000;background-color:transparent;margin:0 0 2px 0;">E-Mail: <a href="mailto:krrishnarrayan08@gmail.com" style="color:#1976d2; text-decoration: underline; font-weight: bold;">Personal E-mail</a> | <a href="mailto:f20241019@pilani.bits-pilani.ac.in" style="color:#1976d2; text-decoration: underline; font-weight: bold;">University E-mail</a></p>
+<p style="font-size:12pt;font-family:'Times New Roman',serif;color:#000;background-color:transparent;margin:0 0 2px 0;">LinkedIn Profile: <a href="https://www.linkedin.com/in/krrish-narrayan-a63865263?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app" style="color:#1976d2; text-decoration: underline; font-weight: bold;">Krrish Narrayan</a></p>
+<p style="font-size:12pt;font-family:'Times New Roman',serif;color:#222;background-color:transparent;margin:0 0 2px 0;font-weight:bold;">Phone: +91 9599570051</p>
+
+<div style="margin:18px 0 10px 0;">
+<span style="font-size:12pt;font-family:&quot;Times New Roman&quot;,serif;color:rgb(241,194,50);background-color:transparent;font-weight:700;font-variant-numeric:normal;font-variant-east-asian:normal;font-variant-alternates:normal;vertical-align:baseline">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</span><span style="font-size:12pt;font-family:&quot;Times New Roman&quot;,serif;color:rgb(253,175,23);background-color:transparent;font-weight:700;font-variant-numeric:normal;font-variant-east-asian:normal;font-variant-alternates:normal;vertical-align:baseline">▄▄</span><span style="font-size:12pt;font-family:&quot;Times New Roman&quot;,serif;color:rgb(117,195,233);background-color:transparent;font-weight:700;font-variant-numeric:normal;font-variant-east-asian:normal;font-variant-alternates:normal;vertical-align:baseline">▄▄▄▄▄▄▄▄▄▄▄▄<wbr>▄▄▄▄▄▄▄▄</span><span style="font-size:12pt;font-family:&quot;Times New Roman&quot;,serif;color:rgb(237,27,36);background-color:transparent;font-weight:700;font-variant-numeric:normal;font-variant-east-asian:normal;font-variant-alternates:normal;vertical-align:baseline">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</span>
+</div>
+
+<p style="font-size:12pt;font-family:'Times New Roman',serif;color:#222;background-color:transparent;font-weight:bold;margin:0;">Birla Institute of Technology &amp; Science, Pilani</p>
+<p style="font-size:12pt;font-family:'Times New Roman',serif;color:#222;background-color:transparent;margin:0;">Pilani Campus, Rajasthan - 333 031, India</p> 

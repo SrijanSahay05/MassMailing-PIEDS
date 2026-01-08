@@ -476,46 +476,7 @@ def send_emails():
                     "status": "CONTACTED",
                     "gmail_thread_id": thread_id
                 }
-                try:
-                    resp = requests.post("https://crm.srijansahay05.in/api/crm/contacts/", json=crm_data, timeout=5)
-                except (ConnectionError, Timeout) as api_err:
-                    return jsonify({
-                        "success": False,
-                        "error": "CRM server is unreachable or timed out. Please check the backend server.",
-                        "details": str(api_err),
-                        "progress": f"{idx+1}/{total_to_send}",
-                        "debug": f"Row {idx+1}: CRM connection error for {recipient_email}"
-                    }), 503
-                except Exception as api_err:
-                    results.append({
-                        "email": recipient_email,
-                        "status": "error",
-                        "message": f"Failed to create contact in CRM: {api_err}",
-                        "progress": f"{idx+1}/{total_to_send}",
-                        "debug": f"Row {idx+1}: CRM error for {recipient_email}: {api_err}"
-                    })
-                    continue
-
-                if resp.status_code == 201:
-                    results.append(
-                        {
-                            "email": recipient_email,
-                            "status": "success",
-                            "message": "Email sent successfully",
-                            "progress": f"{idx+1}/{total_to_send}",
-                            "debug": f"Row {idx+1}: Email sent to {recipient_email}, thread_id={thread_id}"
-                        }
-                    )
-                else:
-                    results.append({
-                        "email": recipient_email,
-                        "status": "error",
-                        "message": f"Failed to create contact in CRM: {resp.text}",
-                        "progress": f"{idx+1}/{total_to_send}",
-                        "debug": f"Row {idx+1}: CRM error for {recipient_email}: {resp.text}"
-                    })
-                    continue
-
+                
             except Exception as e:
                 results.append(
                     {

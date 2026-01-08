@@ -29,7 +29,7 @@ def send_email(service, recipient_email, recipient_name, subject, body_text, is_
 
         message = MIMEText(body_text, "html" if is_html else "plain")
         message["to"] = f"{recipient_name} <{recipient_email}>"
-        message["from"] = f"PIEDS-ST Mail Merge <{sender_email}>"
+        message["from"] = f"Ignite 2025 <{sender_email}>"
         message["subject"] = subject
         
         # Add CC recipients if provided
