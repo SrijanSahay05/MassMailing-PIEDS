@@ -49,23 +49,21 @@
                                 <label for="emailCol" class="form-label">Email Address Column</label>
                                 <select class="form-select" id="emailCol"></select>
                             </div>
-                            <div class="mb-3">
-                                <label for="pocCol" class="form-label">POC Name Column</label>
-                                <select class="form-select" id="pocCol"></select>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label for="designationCol" class="form-label">Designation Column</label>
-                                <select class="form-select" id="designationCol"></select>
-                            </div>
-                            <div class="mb-3">
-                                <label for="companyCol" class="form-label">Company Name Column</label>
-                                <select class="form-select" id="companyCol"></select>
-                            </div>
+                            <!-- Dynamic Column Mappings Container -->
+                            <div id="dynamicColumnMappings"></div>
+                            
                             <div class="mb-3">
                                 <label for="templateSelect" class="form-label">Email Template</label>
                                 <select class="form-select" id="templateSelect"></select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card bg-light">
+                                <div class="card-body">
+                                    <h6 class="card-title">Template Placeholders</h6>
+                                    <p class="card-text text-muted small">Select a template to see required columns.</p>
+                                    <div id="placeholderInfo"></div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -197,31 +195,129 @@ function handleFile(file) {
 }
 function populateColumnSelects(columns) {
     if (!columns || !Array.isArray(columns)) return;
-    const selects = ['emailCol', 'pocCol', 'designationCol', 'companyCol'];
-    selects.forEach(selectId => {
-        const select = document.getElementById(selectId);
-        if (!select) return;
-        select.innerHTML = '';
-        columns.forEach(col => {
+    
+    // Populate Email Column explicitly
+    const emailSelect = document.getElementById('emailCol');
+    emailSelect.innerHTML = '';
+    
+    // Helper to add options
+    const addOptions = (select, cols) => {
+        cols.forEach(col => {
             const option = document.createElement('option');
             option.value = col;
             option.textContent = col;
             select.appendChild(option);
         });
-    });
+    };
+    
+    addOptions(emailSelect, columns);
+    
+    // Try to auto-select email
+    const emailLower = columns.map(c => c.toLowerCase());
+    const emailIdx = emailLower.findIndex(c => c.includes('email') || c.includes('mail'));
+    if (emailIdx !== -1) emailSelect.selectedIndex = emailIdx;
+
     // Load templates
     fetch('/templates')
         .then(response => response.json())
         .then(templates => {
             const select = document.getElementById('templateSelect');
-            select.innerHTML = '';
+            select.innerHTML = '<option value="">-- Select Template --</option>';
             templates.forEach(template => {
                 const option = document.createElement('option');
                 option.value = template;
                 option.textContent = template;
                 select.appendChild(option);
             });
+            
+            // Trigger placeholder load if template selected (unlikely on fresh load but good practice)
+            select.addEventListener('change', () => loadTemplatePlaceholders(select.value, columns));
         });
+}
+
+function loadTemplatePlaceholders(templatePath, columns) {
+    if (!templatePath) {
+        document.getElementById('dynamicColumnMappings').innerHTML = '';
+        document.getElementById('placeholderInfo').innerHTML = '';
+        return;
+    }
+    
+    fetch('/api/template-placeholders', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ template_path: templatePath })
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) {
+            generateDynamicMappings(data.placeholders, columns);
+        } else {
+            console.error(data.error);
+        }
+    });
+}
+
+function generateDynamicMappings(placeholders, columns) {
+    const container = document.getElementById('dynamicColumnMappings');
+    const infoContainer = document.getElementById('placeholderInfo');
+    container.innerHTML = '';
+    infoContainer.innerHTML = '';
+    
+    // Filter out email if it's treated separately, but usually users use {email} in body too.
+    // We will map everything found in placeholders.
+    
+    if (placeholders.length === 0) {
+        infoContainer.innerHTML = '<div class="alert alert-info py-2">No placeholders found in this template.</div>';
+        return;
+    }
+
+    placeholders.forEach(p => {
+        // Skip 'email' from dynamic mapping if we want to enforce the main email selector,
+        // BUT current backend expects it in context if used in body. 
+        // Let's create a mapper for it if it's not "email" (reserved for main recipient)
+        // actually, simpler: map ALL placeholders. 
+        // If placeholder is "email", we can default it to the value of emailCol?
+        // Let's just create inputs for all.
+        
+        const mb3 = document.createElement('div');
+        mb3.className = 'mb-3';
+        
+        const label = document.createElement('label');
+        label.className = 'form-label';
+        label.innerHTML = `Column for <strong>{${p}}</strong>`;
+        
+        const select = document.createElement('select');
+        select.className = 'form-select dynamic-mapping';
+        select.dataset.placeholder = p;
+        
+        // Add options
+        columns.forEach(col => {
+            const option = document.createElement('option');
+            option.value = col;
+            option.textContent = col;
+            select.appendChild(option);
+        });
+        
+        // Smart Automap
+        const pLower = p.toLowerCase();
+        const colIdx = columns.findIndex(c => c.toLowerCase().replace(/[^a-z0-9]/g, '').includes(pLower.replace(/[^a-z0-9]/g, '')));
+        if (colIdx !== -1) {
+            select.selectedIndex = colIdx;
+        } else {
+             // Try "name" for "poc_name" etc
+             if (pLower.includes('name')) {
+                  const nameIdx = columns.findIndex(c => c.toLowerCase().includes('name') || c.toLowerCase().includes('poc'));
+                  if (nameIdx !== -1) select.selectedIndex = nameIdx;
+             }
+        }
+
+        mb3.appendChild(label);
+        mb3.appendChild(select);
+        container.appendChild(mb3);
+        
+        // Info tag
+        infoContainer.innerHTML += `<span class="badge bg-secondary me-1 mb-1">{${p}}</span>`;
+    });
 }
 function populateDataPreview(data) {
     const tbody = document.getElementById('dataPreviewBody');
@@ -255,18 +351,20 @@ function previewEmails() {
         alert('Please upload a file first');
         return;
     }
-    const emailCol = document.getElementById('emailCol');
-    const pocCol = document.getElementById('pocCol');
-    const designationCol = document.getElementById('designationCol');
-    const companyCol = document.getElementById('companyCol');
-    const templateSelect = document.getElementById('templateSelect');
+    
+    // Gather dynamic mappings
+    const columnMapping = {};
+    // Add email explicitly (for recipient address)
+    columnMapping['email'] = document.getElementById('emailCol').value; 
+    
+    document.querySelectorAll('.dynamic-mapping').forEach(select => {
+        columnMapping[select.dataset.placeholder] = select.value;
+    });
+
     const data = {
         filename: currentFile,
-        email_col: emailCol.value,
-        poc_col: pocCol.value,
-        designation_col: designationCol.value,
-        company_col: companyCol.value,
-        template_path: templateSelect.value,
+        column_mapping: columnMapping,
+        template_path: document.getElementById('templateSelect').value,
         page: currentPage,
         per_page: emailsPerPage
     };
@@ -320,9 +418,8 @@ function displayEmailPreview(emails, pagination = null) {
                         <strong>Subject:</strong> ${email.subject || 'N/A'}
                     </div>
                     <div class="col-md-6">
-                        <strong>POC:</strong> ${email.poc_name || 'N/A'} (${email.designation || 'N/A'} at ${email.company || 'N/A'})
+                        <strong>POC:</strong> ${email.context ? (email.context.poc_name || email.context.name || 'N/A') : 'N/A'}
                     </div>
-                </div>
                 <div class="mt-3">
                     <strong>Email Body:</strong>
                     <div class="border rounded p-3 bg-light mt-2" style="max-height: 400px; overflow-y: auto;">
@@ -384,12 +481,17 @@ function sendEmails() {
         }
     }
     
+    
+    // Gather dynamic mappings
+    const columnMapping = {};
+    columnMapping['email'] = document.getElementById('emailCol').value; 
+    document.querySelectorAll('.dynamic-mapping').forEach(select => {
+        columnMapping[select.dataset.placeholder] = select.value;
+    });
+
     const data = {
         filename: currentFile,
-        email_col: document.getElementById('emailCol').value,
-        poc_col: document.getElementById('pocCol').value,
-        designation_col: document.getElementById('designationCol').value,
-        company_col: document.getElementById('companyCol').value,
+        column_mapping: columnMapping,
         template_path: document.getElementById('templateSelect').value,
         cc: ccEmails,
         campaign_name: `Campaign ${new Date().toLocaleString()}`

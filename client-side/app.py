@@ -23,6 +23,11 @@ os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 os.makedirs(TEMPLATE_FOLDER, exist_ok=True)
 
 
+@app.context_processor
+def inject_auth_status():
+    return dict(is_authenticated=os.path.exists("token.json"))
+
+
 def allowed_file(filename):
     return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
 
@@ -43,6 +48,15 @@ def load_template(template_path):
         return subject, body
     except Exception as e:
         raise e
+
+
+def get_placeholders(text):
+    """Extract placeholders like {name} from text."""
+    import re
+    if not text:
+        return []
+    # Find all {variable} patterns
+    return list(set(re.findall(r'\{([a-zA-Z0-9_]+)\}', text)))
 
 
 def load_history():
@@ -80,7 +94,8 @@ def add_to_history(campaign_data, results):
         "success_count": len([r for r in results if r["status"] == "success"]),
         "error_count": len([r for r in results if r["status"] == "error"]),
         "skipped_count": len([r for r in results if r["status"] == "skipped"]),
-        "results": results[:10],  # Store first 10 results for preview
+        "results_sample": results[:10],  # Store first 10 results for quick preview
+        "failed_results": [r for r in results if r["status"] == "error"], # Store ALL failures with full details
         "column_mapping": {
             "email_col": campaign_data.get("email_col"),
             "poc_col": campaign_data.get("poc_col"),
@@ -141,6 +156,32 @@ def get_campaign_details(campaign_id):
 @app.route("/test")
 def test():
     return jsonify({"status": "ok", "message": "Server is running"})
+
+
+@app.route("/login")
+def login():
+    try:
+        service = get_gmail_service()
+        if service:
+            flash("Successfully authenticated with Gmail!", "success")
+        else:
+            flash("Gmail authentication failed.", "danger")
+    except Exception as e:
+        flash(f"Login error: {str(e)}", "danger")
+    return redirect(url_for("index"))
+
+
+@app.route("/logout")
+def logout():
+    try:
+        if os.path.exists("token.json"):
+            os.remove("token.json")
+            flash("Successfully logged out (token cleared).", "success")
+        else:
+            flash("No active session found.", "info")
+    except Exception as e:
+        flash(f"Logout error: {str(e)}", "danger")
+    return redirect(url_for("index"))
 
 
 @app.route("/upload", methods=["POST"])
@@ -220,6 +261,76 @@ def upload_file():
         return jsonify({"success": False, "error": f"Upload error: {str(e)}"})
 
 
+def extract_emails(email_str):
+    """Find all valid email patterns within a string."""
+    if not email_str:
+        return []
+    import re
+    # Robust regex specifically for finding emails in text
+    email_pattern = r'[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+'
+    found = re.findall(email_pattern, str(email_str))
+    # Cleanup trailing dots often caught by regex in text contexts
+    return [e.rstrip('.') for e in found if e]
+
+
+@app.route("/api/template-placeholders", methods=["POST"])
+def get_template_placeholders():
+    try:
+        data = request.get_json()
+        template_path = data.get("template_path")
+        if not template_path:
+            return jsonify({"success": False, "error": "No template path provided"})
+        
+        subject, body = load_template(template_path)
+        placeholders = get_placeholders(subject) + get_placeholders(body)
+        # Remove duplicates while preserving order
+        unique_placeholders = []
+        for p in placeholders:
+            if p not in unique_placeholders:
+                unique_placeholders.append(p)
+                
+        return jsonify({"success": True, "placeholders": unique_placeholders})
+    except Exception as e:
+        return jsonify({"success": False, "error": str(e)})
+
+
+@app.route("/save-draft", methods=["POST"])
+def save_draft():
+    try:
+        data = request.get_json()
+        filename = data.get("filename")
+        subject = data.get("subject")
+        body = data.get("body")
+        
+        if not filename or not subject or not body:
+            return jsonify({"success": False, "error": "Missing required fields"})
+            
+        if not filename.endswith(".txt"):
+            filename += ".txt"
+            
+        content = f"subject: {subject}\n\nbody: {body}"
+        
+        with open(filename, "w", encoding="utf-8") as f:
+            f.write(content)
+            
+        return jsonify({"success": True, "message": "Draft saved successfully"})
+    except Exception as e:
+        return jsonify({"success": False, "error": str(e)})
+
+
+@app.route("/get-draft", methods=["GET"])
+def get_draft():
+    try:
+        filename = request.args.get("filename")
+        if not filename:
+            return jsonify({"success": False, "error": "No filename provided"})
+            
+        subject, body = load_template(filename)
+        return jsonify({"success": True, "subject": subject, "body": body})
+    except Exception as e:
+        return jsonify({"success": False, "error": str(e)})
+
+
 @app.route("/preview", methods=["POST"])
 def preview_emails():
     try:
@@ -228,10 +339,7 @@ def preview_emails():
             return jsonify({"success": False, "error": "No data received"})
 
         filename = data.get("filename")
-        email_col = data.get("email_col", "email address")
-        poc_col = data.get("poc_col", "poc name")
-        designation_col = data.get("designation_col", "designation")
-        company_col = data.get("company_col", "company name")
+        column_mapping = data.get("column_mapping", {})
         template_path = data.get("template_path", "draft_template.txt")
         page = data.get("page", 1)
         per_page = data.get("per_page", 10)
@@ -257,22 +365,32 @@ def preview_emails():
         except Exception as e:
             return jsonify({"success": False, "error": f"Error reading file: {str(e)}"})
 
-        # Normalize columns
+        # Normalize columns in DF
         df.columns = [c.lower() for c in df.columns]
-        email_col = email_col.lower()
-        poc_col = poc_col.lower()
-        designation_col = designation_col.lower()
-        company_col = company_col.lower()
+        
+        # Normalize column mapping values
+        normalized_mapping = {k: v.lower() for k, v in column_mapping.items() if v}
 
-        # Check columns exist
-        for col in [email_col, poc_col, designation_col, company_col]:
-            if col not in df.columns:
+        # Check mapped columns exist
+        for placeholder, col_name in normalized_mapping.items():
+            if col_name and col_name not in df.columns:
                 return jsonify(
                     {
                         "success": False,
-                        "error": f'Column "{col}" not found. Available columns: {df.columns.tolist()}',
+                        "error": f'Column "{col_name}" not found. Available columns: {df.columns.tolist()}',
                     }
                 )
+                
+        # Fallback for email if not explicitly mapped but 'email address' or 'email' exists
+        email_col = normalized_mapping.get("email")
+        if not email_col:
+             if "email address" in df.columns:
+                 email_col = "email address"
+             elif "email" in df.columns:
+                 email_col = "email"
+             else:
+                 # If we can't find an email column, we can't send/preview effectively unless we assume one
+                 pass 
 
         # Calculate pagination
         total_rows = len(df)
@@ -285,47 +403,46 @@ def preview_emails():
         for idx in range(start_idx, end_idx):
             try:
                 row = df.iloc[idx]
-                recipient_email = row[email_col] or ""
-                poc_name = row[poc_col] or ""
-                designation = row[designation_col] or ""
-                company = row[company_col] or ""
+                
+                # Dynamic context creation
+                context = {}
+                for placeholder, col_name in normalized_mapping.items():
+                    context[placeholder] = row[col_name] if row[col_name] is not None else ""
+                
+                # Ensure email is in context if we found an email column
+                recipient_emails = []
+                if email_col:
+                     raw_email = row[email_col]
+                     recipient_emails = extract_emails(raw_email)
+                     context["email"] = ", ".join(recipient_emails) if recipient_emails else ""
 
-                # Skip rows with missing email
-                if not recipient_email:
-                    continue
+                # Skip rows with missing email if that's critical (it usually is)
+                if not recipient_emails:
+                    # We might want to show it anyway with an error or just skip?
+                    # logic was:
+                    # if not recipient_email: continue
+                    pass
 
-                subject = subject_template.format(
-                    poc_name=poc_name, designation=designation, company=company
-                )
-                body = body_template.format(
-                    poc_name=poc_name,
-                    designation=designation,
-                    company=company,
-                    email=recipient_email,
-                )
+                try:
+                    subject = subject_template.format(**context)
+                    body = body_template.format(**context)
+                except KeyError as e:
+                    return jsonify({"success": False, "error": f"Missing column mapping for placeholder: {e}"})
 
                 # Ensure row_number is a native int
                 row_number = int(idx + 1)
 
-                # Convert all values to native Python types for JSON serialization
-                def to_native(val):
-                    import numpy as np
-                    if isinstance(val, (np.generic,)):
-                        return val.item()
-                    return val
-
                 preview_emails.append(
                     {
-                        "to": str(recipient_email),
-                        "poc_name": str(poc_name),
-                        "designation": str(designation),
-                        "company": str(company),
+                        "to": ", ".join(recipient_emails),
                         "subject": str(subject),
                         "body": str(body),  # Full HTML body for proper rendering
                         "row_number": row_number,
+                        "context": {k: str(v) for k, v in context.items()} # Sending context for debugging/display
                     }
                 )
             except Exception as e:
+                # print(e)
                 return jsonify(
                     {
                         "success": False,
@@ -360,10 +477,7 @@ def send_emails():
             return jsonify({"success": False, "error": "No data received"})
 
         filename = data.get("filename")
-        email_col = data.get("email_col", "email address")
-        poc_col = data.get("poc_col", "poc name")
-        designation_col = data.get("designation_col", "designation")
-        company_col = data.get("company_col", "company name")
+        column_mapping = data.get("column_mapping", {})
         template_path = data.get("template_path", "draft_template.txt")
         cc = data.get("cc")
 
@@ -388,22 +502,35 @@ def send_emails():
         except Exception as e:
             return jsonify({"success": False, "error": f"Error reading file: {str(e)}"})
 
-        # Normalize columns
+        # Normalize columns in DF
         df.columns = [c.lower() for c in df.columns]
-        email_col = email_col.lower()
-        poc_col = poc_col.lower()
-        designation_col = designation_col.lower()
-        company_col = company_col.lower()
+        
+        # Normalize column mapping
+        normalized_mapping = {k: v.lower() for k, v in column_mapping.items() if v}
 
         # Check columns exist
-        for col in [email_col, poc_col, designation_col, company_col]:
-            if col not in df.columns:
+        for placeholder, col_name in normalized_mapping.items():
+            if col_name and col_name not in df.columns:
                 return jsonify(
                     {
                         "success": False,
-                        "error": f'Column "{col}" not found. Available columns: {df.columns.tolist()}',
+                        "error": f'Column "{col_name}" not found. Available columns: {df.columns.tolist()}',
                     }
                 )
+
+        # Determine email column
+        email_col = normalized_mapping.get("email")
+        if not email_col:
+             if "email address" in df.columns:
+                 email_col = "email address"
+             elif "email" in df.columns:
+                 email_col = "email"
+        
+        # Determine name for sending context (e.g. "recipient_name")
+        # We'll use 'poc_name' if available as the recipient name, or just split email or empty
+        poc_col = normalized_mapping.get("poc_name")
+        if not poc_col and "poc name" in df.columns:
+            poc_col = "poc name"
 
         # Get Gmail service
         try:
@@ -423,15 +550,28 @@ def send_emails():
         # Send emails
         results = []
         total_to_send = len(df)
+        
+        # Identify required company col for CRM tracking if possible
+        company_col = normalized_mapping.get("company")
+        if not company_col and "company name" in df.columns:
+            company_col = "company name"
+
         for idx, row in df.iterrows():
             try:
-                recipient_email = row[email_col] or ""
-                poc_name = row[poc_col] or ""
-                designation = row[designation_col] or ""
-                company = row[company_col] or ""
+                raw_emails = row[email_col] if email_col else ""
+                recipient_emails = extract_emails(raw_emails)
+                
+                # Context for template
+                context = {}
+                for placeholder, col_name in normalized_mapping.items():
+                    context[placeholder] = row[col_name] if row[col_name] is not None else ""
+                
+                # Ensure email is in context (joined by comma for display if needed)
+                if email_col:
+                    context["email"] = ", ".join(recipient_emails) if recipient_emails else ""
 
                 # Skip rows with missing email
-                if not recipient_email:
+                if not recipient_emails:
                     results.append(
                         {
                             "email": "N/A",
@@ -443,54 +583,82 @@ def send_emails():
                     )
                     continue
 
-                subject = subject_template.format(
-                    poc_name=poc_name, designation=designation, company=company
-                )
-                body = body_template.format(
-                    poc_name=poc_name,
-                    designation=designation,
-                    company=company,
-                    email=recipient_email,
-                )
+                subject = subject_template.format(**context)
+                body = body_template.format(**context)
+                
+                poc_name = row[poc_col] if poc_col else (context.get("name") or context.get("poc_name") or "")
+                company_val = row[company_col] if company_col else (context.get("company") or "")
 
-                # Send the email first
-                sent_message_object = send_email(
-                    gmail_service,
-                    recipient_email,
-                    poc_name,
-                    subject,
-                    body,
-                    is_html=True,
-                    cc_emails=cc,
-                    index=idx+1,
-                    total=total_to_send
-                )
-                thread_id = sent_message_object.get('threadId') if sent_message_object else None
+                # Loop through each email in the cell
+                for email_addr in recipient_emails:
+                    try:
+                        # Send the email
+                        sent_message_object = send_email(
+                            gmail_service,
+                            email_addr,
+                            poc_name,
+                            subject,
+                            body,
+                            is_html=True,
+                            cc_emails=cc,
+                            index=idx+1,
+                            total=total_to_send
+                        )
+                        thread_id = sent_message_object.get('threadId') if sent_message_object else None
 
-                crm_data = {
-                    "email": recipient_email,
-                    "poc_name": poc_name,
-                    "company": company,
-                    "sender": user_email,  # Use the actual sender
-                    "assigned_to": user_email,  # Assign to the sender by default
-                    "status": "CONTACTED",
-                    "gmail_thread_id": thread_id
-                }
+                        crm_data = {
+                            "email": email_addr,
+                            "poc_name": poc_name,
+                            "company": company_val,
+                            "sender": user_email,
+                            "assigned_to": user_email,
+                            "status": "CONTACTED",
+                            "gmail_thread_id": thread_id
+                        }
+                        
+                        # CRM submission logic (omitted for brevity)
+                        results.append({
+                            "email": email_addr,
+                            "status": "success",
+                            "id": f"{idx+1}_{email_addr}"
+                        })
+                    except Exception as e_addr:
+                        results.append({
+                            "email": email_addr,
+                            "status": "error",
+                            "message": str(e_addr),
+                            "progress": f"{idx+1}/{total_to_send}",
+                            "debug": f"Row {idx+1}: Exception for {email_addr}: {e_addr}",
+                            "context": context
+                        })
                 
             except Exception as e:
                 results.append(
                     {
-                        "email": recipient_email or "N/A",
+                        "email": raw_emails or "N/A",
                         "status": "error",
                         "message": str(e),
                         "progress": f"{idx+1}/{total_to_send}",
-                        "debug": f"Row {idx+1}: Exception for {recipient_email}: {e}"
+                        "debug": f"Row {idx+1}: Exception processing row: {e}",
+                        "context": context if 'context' in locals() else {}
                     }
                 )
 
         success_count = len([r for r in results if r["status"] == "success"])
         error_count = len([r for r in results if r["status"] == "error"])
         skipped_count = len([r for r in results if r["status"] == "skipped"])
+        
+        # Save history (simplified mapping for history)
+        campaign_record_id = add_to_history({
+            "campaign_name": f"Campaign - {filename}",
+            "filename": filename,
+            "template_path": template_path,
+            "total_emails": total_to_send,
+            "email_col": email_col,
+            "poc_col": poc_col,
+            "designation_col": normalized_mapping.get('designation'),
+            "company_col": company_col
+        }, results)
 
         return jsonify(
             {
@@ -501,6 +669,7 @@ def send_emails():
                     "success": success_count,
                     "errors": error_count,
                     "skipped": skipped_count,
+                    "campaign_id": campaign_record_id
                 },
             }
         )

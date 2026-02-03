@@ -85,11 +85,32 @@
                             <i class="fas fa-tachometer-alt me-1"></i>Dashboard
                         </a>
                     </li>
+                    <li class="nav-item ms-lg-3">
+                        {% if is_authenticated %}
+                        <a class="btn btn-outline-light btn-sm" href="/logout">
+                            <i class="fas fa-sign-out-alt me-1"></i>Logout
+                        </a>
+                        {% else %}
+                        <a class="btn btn-warning btn-sm" href="/login">
+                            <i class="fas fa-sign-in-alt me-1"></i>Login with Gmail
+                        </a>
+                        {% endif %}
+                    </li>
                 </ul>
             </div>
         </div>
     </nav>
     <div class="container">
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          {% for category, message in messages %}
+            <div class="alert alert-{{ category if category != 'error' else 'danger' }} alert-dismissible fade show mt-3" role="alert">
+              {{ message }}
+              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+          {% endfor %}
+        {% endif %}
+      {% endwith %}
       <div class="main-card">
         {% block content %}{% endblock %}
       </div>

@@ -5,6 +5,11 @@ from googleapiclient.errors import HttpError
 from google_authentication import get_gmail_service
 
 
+import re
+import uuid
+from email.mime.multipart import MIMEMultipart
+from email.mime.image import MIMEImage
+
 def send_email(service, recipient_email, recipient_name, subject, body_text, is_html=False, cc_emails=None, index=None, total=None):
     """
     Creates and sends an email to a specific recipient.
@@ -27,9 +32,41 @@ def send_email(service, recipient_email, recipient_name, subject, body_text, is_
         user_profile = service.users().getProfile(userId="me").execute()
         sender_email = user_profile["emailAddress"]
 
-        message = MIMEText(body_text, "html" if is_html else "plain")
+        # Check for embedded images in HTML body
+        embedded_images = []
+        if is_html:
+            # Regex to find base64 images
+            # Matches src="data:image/png;base64,....."
+            # Captures: 1=extension (png/jpeg/etc), 2=base64 data
+            pattern = r'src="data:image/(\w+);base64,([^"]+)"'
+            
+            def replace_image(match):
+                img_ext = match.group(1)
+                img_data_b64 = match.group(2)
+                cid = str(uuid.uuid4())
+                embedded_images.append((cid, img_ext, img_data_b64))
+                return f'src="cid:{cid}"'
+            
+            body_text = re.sub(pattern, replace_image, body_text)
+
+        if embedded_images:
+            message = MIMEMultipart("related")
+            message.attach(MIMEText(body_text, "html"))
+            
+            for cid, img_ext, img_data_b64 in embedded_images:
+                try:
+                    img_data = base64.b64decode(img_data_b64)
+                    img = MIMEImage(img_data, _subtype=img_ext)
+                    img.add_header('Content-ID', f'<{cid}>')
+                    img.add_header('Content-Disposition', 'inline')
+                    message.attach(img)
+                except Exception as e:
+                    print(f"Warning: Failed to attach image cid:{cid}: {e}")
+        else:
+            message = MIMEText(body_text, "html" if is_html else "plain")
+
         message["to"] = f"{recipient_name} <{recipient_email}>"
-        message["from"] = f"Ignite 2025 <{sender_email}>"
+        message["from"] = f"E-Summit '26 <{sender_email}>"
         message["subject"] = subject
         
         # Add CC recipients if provided

@@ -1,18 +1,414 @@
 {% extends "base.html" %}
+
 {% block title %}Draft Editor - PIEDS Mass Mailing System{% endblock %}
+
+{% block head %}
+<link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+<style>
+    body {
+        background-color: #f4f6f9;
+    }
+    .editor-container {
+        max-width: 850px;
+        margin: 0 auto;
+    }
+    #editor {
+        height: 600px;
+        background: white;
+        font-family: 'Arial', sans-serif; 
+        line-height: 1.2; 
+        font-size: 14px;
+        border: 1px solid #ccc;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        /* Simulate an A4ish page or standard email width */
+    }
+    .ql-editor {
+        padding: 40px; /* More padding like a real doc */
+        line-height: 1.2 !important;
+    }
+    /* Industry Standard: Zero margin for precise control via keyboard */
+    .ql-editor p {
+        margin-bottom: 0;
+        margin-top: 0;
+        padding: 0;
+    }
+    .ql-toolbar {
+        background: #fff;
+        border: 1px solid #ccc;
+        border-bottom: none;
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+    
+    /* Toolbar Labels */
+    .ql-snow .ql-picker.ql-lineheight .ql-picker-label::before,
+    .ql-snow .ql-picker.ql-lineheight .ql-picker-item::before {
+        content: attr(data-value);
+    }
+    .ql-snow .ql-picker.ql-lineheight .ql-picker-label[data-value="1.0"]::before,
+    .ql-snow .ql-picker.ql-lineheight .ql-picker-item[data-value="1.0"]::before {
+        content: "Line: 1.0";
+    }
+    
+    .ql-snow .ql-picker.ql-marginbottom .ql-picker-label::before,
+    .ql-snow .ql-picker.ql-marginbottom .ql-picker-item::before {
+        content: attr(data-value);
+    }
+
+    /* Font Family Labels */
+    .ql-snow .ql-picker.ql-font .ql-picker-label[data-value="times new roman"]::before,
+    .ql-snow .ql-picker.ql-font .ql-picker-item[data-value="times new roman"]::before {
+        content: 'Times New Roman';
+        font-family: 'Times New Roman', serif;
+    }
+    .ql-snow .ql-picker.ql-font .ql-picker-label[data-value="arial"]::before,
+    .ql-snow .ql-picker.ql-font .ql-picker-item[data-value="arial"]::before {
+        content: 'Arial';
+        font-family: 'Arial', sans-serif;
+    }
+    .ql-snow .ql-picker.ql-font .ql-picker-label[data-value="calibri"]::before,
+    .ql-snow .ql-picker.ql-font .ql-picker-item[data-value="calibri"]::before {
+        content: 'Calibri';
+        font-family: 'Calibri', sans-serif;
+    }
+    .ql-snow .ql-picker.ql-font .ql-picker-label[data-value="serif"]::before,
+    .ql-snow .ql-picker.ql-font .ql-picker-item[data-value="serif"]::before {
+        content: 'Serif';
+        font-family: serif;
+    }
+    .ql-snow .ql-picker.ql-font .ql-picker-label[data-value="sans-serif"]::before,
+    .ql-snow .ql-picker.ql-font .ql-picker-item[data-value="sans-serif"]::before {
+        content: 'Sans Serif';
+        font-family: sans-serif;
+    }
+</style>
+{% endblock %}
+
 {% block content %}
-<!-- Place your draft editor content here -->
-<div class="container-fluid py-5">
-    <div class="card shadow">
-        <div class="card-header bg-primary text-white">
-            <h2 class="mb-0">Draft Editor</h2>
+<div class="editor-container">
+    <div class="row">
+        <div class="col-md-12">
+            <h2 class="mb-4 text-center">Interactive Draft Editor</h2>
+            
+            <!-- Controls -->
+            <div class="card mb-4 border-0 shadow-sm" style="background: transparent;">
+                <div class="card-body p-0">
+                    <div class="row g-2 align-items-end">
+                    <div class="col-md-4">
+                        <label for="templateSelect" class="form-label">Load Existing Draft</label>
+                        <select class="form-select" id="templateSelect">
+                            <option value="">-- Select a Draft --</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <button class="btn btn-secondary w-100" id="loadBtn">Load</button>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="saveFilename" class="form-label">Save As (Filename)</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="saveFilename" placeholder="my_draft">
+                            <span class="input-group-text">.txt</span>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <button class="btn btn-success w-100" id="saveBtn">Save Draft</button>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="card-body">
-            <!-- Existing draft editor content goes here -->
-            <form id="draftForm">
-                <!-- Form fields for draft editing -->
-            </form>
+
+        <!-- Editor Area -->
+        <div class="card shadow-sm border-0">
+            <div class="card-body p-0">
+                <!-- Subject Line (Email Client Style) -->
+                <div class="p-3 border-bottom">
+                    <input type="text" class="form-control border-0 fw-bold fs-5" id="draftSubject" placeholder="Subject">
+                </div>
+                
+                <div class=""> <!-- Wrapper for sticky toolbar -->
+                    <div id="editor"></div>
+                </div>
+                
+                <!-- Placeholder Tools (Bottom Bar) -->
+                <div class="p-3 bg-light border-top">
+                    <small class="text-muted fw-bold me-2">Quick Insert:</small>
+                    <button class="btn btn-outline-secondary btn-sm placeholder-btn" data-placeholder="{poc_name}">POC Name</button>
+                    <button class="btn btn-outline-secondary btn-sm placeholder-btn" data-placeholder="{company}">Company</button>
+                    <button class="btn btn-outline-secondary btn-sm placeholder-btn" data-placeholder="{designation}">Designation</button>
+                    <button class="btn btn-outline-secondary btn-sm placeholder-btn" data-placeholder="{email}">Email</button>
+                    <div class="vr mx-2"></div>
+                    <button class="btn btn-outline-info btn-sm placeholder-btn" onclick="insertCustomPlaceholder()">Custom...</button>
+                    <button class="btn btn-outline-warning btn-sm placeholder-btn" onclick="insertBitsBar()">Bits Bar</button>
+                    <button class="btn btn-outline-dark btn-sm placeholder-btn" onclick="insertSignOff()">Sign Off</button>
+                </div>
+            </div>
         </div>
     </div>
 </div>
-{% endblock %} 
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+<script>
+    var Parchment = Quill.import('parchment');
+    var StyleAttributor = Parchment.Attributor.Style;
+    var ClassAttributor = Parchment.Attributor.Class;
+
+    // Use StyleAttributor for Font and Size to ensure inline styles for Emails (better compatibility)
+    var FontStyle = new StyleAttributor('font', 'font-family', {
+        scope: Parchment.Scope.INLINE,
+        whitelist: ['arial', 'times new roman', 'calibri', 'serif', 'sans-serif']
+    });
+    Quill.register(FontStyle, true);
+
+    var SizeStyle = new StyleAttributor('size', 'font-size', {
+        scope: Parchment.Scope.INLINE,
+        whitelist: ['10px', '12px', '12pt', '14px', '16px', '18px', '20px', '24px', '32px']
+    });
+    Quill.register(SizeStyle, true);
+
+    // Line Height (Style)
+    var LineHeightStyle = new StyleAttributor('lineheight', 'line-height', {
+        scope: Parchment.Scope.BLOCK,
+        whitelist: ['0.8', '0.9', '1.0', '1.1', '1.2', '1.3', '1.4', '1.5', '2.0']
+    });
+    Quill.register(LineHeightStyle, true);
+
+    // Paragraph Spacing (Margin Bottom - Style) - Applied to Block
+    var MarginBottomStyle = new StyleAttributor('marginbottom', 'margin-bottom', {
+        scope: Parchment.Scope.BLOCK,
+        whitelist: ['0px', '2px', '5px', '10px', '15px', '18px', '20px', '30px']
+    });
+    Quill.register(MarginBottomStyle, true);
+
+    // Color and Background (Styles)
+    var ColorStyle = new StyleAttributor('color', 'color', { scope: Parchment.Scope.INLINE });
+    var BackgroundStyle = new StyleAttributor('background', 'background-color', { scope: Parchment.Scope.INLINE });
+    Quill.register(ColorStyle, true);
+    Quill.register(BackgroundStyle, true);
+
+    // Font Style and Weight (Styles)
+    var FontStyleAttr = new StyleAttributor('fontstyle', 'font-style', { scope: Parchment.Scope.INLINE, whitelist: ['italic', 'normal'] });
+    var FontWeightAttr = new StyleAttributor('fontweight', 'font-weight', { scope: Parchment.Scope.INLINE, whitelist: ['bold', 'normal', '700', '400'] });
+    Quill.register(FontStyleAttr, true);
+    Quill.register(FontWeightAttr, true);
+
+    // Text Decoration
+    var TextDecorStyle = new StyleAttributor('textdecoration', 'text-decoration', { scope: Parchment.Scope.INLINE, whitelist: ['underline', 'none'] });
+    Quill.register(TextDecorStyle, true);
+
+    // Margin (General)
+    var MarginStyle = new StyleAttributor('margin', 'margin', { scope: Parchment.Scope.BLOCK });
+    Quill.register(MarginStyle, true);
+
+    // Vertical Align
+    var VerticalAlignStyle = new StyleAttributor('verticalalign', 'vertical-align', { scope: Parchment.Scope.INLINE });
+    Quill.register(VerticalAlignStyle, true);
+
+    // Initialize Quill
+    var quill = new Quill('#editor', {
+        theme: 'snow',
+        modules: {
+            toolbar: [
+                [{ 'font': ['arial', 'times new roman', 'calibri', 'serif', 'sans-serif'] }, { 'size': ['10px', '12px', '12pt', '14px', '16px', '18px', '20px', '24px', '32px'] }],
+                [{ 'lineheight': ['0.8', '0.9', '1.0', '1.1', '1.2', '1.3', '1.4', '1.5', '2.0'] }],
+                [{ 'marginbottom': ['0px', '2px', '5px', '10px', '15px', '18px', '20px', '30px'] }],
+                [{ 'header': [1, 2, 3, false] }],
+                ['bold', 'italic', 'underline', 'strike'],
+                [{ 'color': [] }, { 'background': [] }],
+                [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                ['link', 'image', 'clean']
+            ],
+            keyboard: {
+                bindings: {
+                    'list autofill': {
+                        prefix: /^\s{0,}(1){1}\.\s{1}$/,
+                        handler: function(range, context) { return true; } // allow default
+                    },
+                    'enter': {
+                        key: 13,
+                        handler: function(range, context) {
+                             // Check if we are in a list/header/code-block - allow default
+                             var format = this.quill.getFormat(range);
+                             if (format['list'] || format['header'] || format['code-block']) {
+                                 return true; 
+                             }
+                             // Default "Enter" = New Paragraph (18px margin)
+                             this.quill.insertText(range.index, '\n', Quill.sources.USER);
+                             this.quill.formatLine(range.index, 1, 'marginbottom', '18px', Quill.sources.USER);
+                             // Also ensure the *new* line starts fresh? (Inherits usually)
+                             // Actually, formatLine affects the line *ending* at the newline. 
+                             // The new line starts after. We might need to clear margin for next line?
+                             // But usually paragraphs follow paragraphs. So inheriting 18px is fine.
+                             // BUT user wants Enter -> New Para.
+                             return false; 
+                        }
+                    },
+                    'shift enter': {
+                        key: 13,
+                        shiftKey: true,
+                        handler: function(range, context) {
+                             // "Shift+Enter" = New Line (0px margin)
+                             // We want to "break" the paragraph but keep it visually tight.
+                             // If previous line was 18px, and we Shift+Enter, we want THIS break to be 0px?
+                             // No, Shift+Enter usually means "Insert Line Break".
+                             // In Block model, this means "Finish block, but with 0px margin".
+                             this.quill.insertText(range.index, '\n', Quill.sources.USER);
+                             this.quill.formatLine(range.index, 1, 'marginbottom', '0px', Quill.sources.USER);
+                             return false; 
+                        }
+                    }
+                }
+            }
+        }
+    });
+
+    // Populate Templates Function
+    function loadTemplateList() {
+        fetch('/templates')
+            .then(response => response.json())
+            .then(data => {
+                const select = document.getElementById('templateSelect');
+                select.innerHTML = '<option value="">-- Select a Draft --</option>';
+                data.forEach(template => {
+                    const option = document.createElement('option');
+                    option.value = template;
+                    option.textContent = template;
+                    select.appendChild(option);
+                });
+            })
+            .catch(error => console.error('Error loading templates:', error));
+    }
+
+    // Initial Load
+    loadTemplateList();
+
+    // Insert Placeholder Logic
+    document.querySelectorAll('.placeholder-btn').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            if (this.hasAttribute('data-placeholder')) {
+                const placeholder = this.getAttribute('data-placeholder');
+                const range = quill.getSelection(true);
+                quill.insertText(range.index, placeholder, 'user');
+                quill.setSelection(range.index + placeholder.length);
+            }
+        });
+    });
+    
+    function insertSignOff() {
+        const signOffHtml = `
+<p style="font-size:12pt;font-family:'Times New Roman',serif;color:#888;background-color:transparent;margin:0 0 2px 0;font-style:italic;font-weight:bold;">Best Regards,</p>
+<p style="font-size:12pt;font-family:'Times New Roman',serif;color:#000;background-color:transparent;margin:0 0 2px 0;font-weight:bold;">Krrish Narayan</p>
+<p style="font-size:12pt;font-family:'Times New Roman',serif;color:#000;background-color:transparent;margin:0 0 2px 0;font-weight:bold;">Partnership Associate</p>
+<p style="font-size:12pt;font-family:'Times New Roman',serif;color:#000;background-color:transparent;margin:0 0 2px 0;">PIEDS Student Team</p>
+<p style="font-size:12pt;font-family:'Times New Roman',serif;color:#000;background-color:transparent;margin:0 0 2px 0;">E-Mail: <a href="mailto:krrishnarrayan08@gmail.com" style="color:#1976d2; text-decoration: underline; font-weight: bold;">Personal E-mail</a> | <a href="mailto:f20241019@pilani.bits-pilani.ac.in" style="color:#1976d2; text-decoration: underline; font-weight: bold;">University E-mail</a></p>
+<p style="font-size:12pt;font-family:'Times New Roman',serif;color:#000;background-color:transparent;margin:0 0 2px 0;">LinkedIn Profile: <a href="https://www.linkedin.com/in/krrish-narrayan-a63865263?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app" style="color:#1976d2; text-decoration: underline; font-weight: bold;">Krrish Narrayan</a></p>
+<p style="font-size:12pt;font-family:'Times New Roman',serif;color:#222;background-color:transparent;margin:0 0 2px 0;font-weight:bold;">Phone: +91 9599570051</p>
+
+<div style="margin:18px 0 10px 0;">
+<span style="font-size:12pt;font-family:&quot;Times New Roman&quot;,serif;color:rgb(241,194,50);background-color:transparent;font-weight:700;font-variant-numeric:normal;font-variant-east-asian:normal;font-variant-alternates:normal;vertical-align:baseline">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</span><span style="font-size:12pt;font-family:&quot;Times New Roman&quot;,serif;color:rgb(253,175,23);background-color:transparent;font-weight:700;font-variant-numeric:normal;font-variant-east-asian:normal;font-variant-alternates:normal;vertical-align:baseline">▄▄</span><span style="font-size:12pt;font-family:&quot;Times New Roman&quot;,serif;color:rgb(117,195,233);background-color:transparent;font-weight:700;font-variant-numeric:normal;font-variant-east-asian:normal;font-variant-alternates:normal;vertical-align:baseline">▄▄▄▄▄▄▄▄▄▄▄▄<wbr>▄▄▄▄▄▄▄▄</span><span style="font-size:12pt;font-family:&quot;Times New Roman&quot;,serif;color:rgb(237,27,36);background-color:transparent;font-weight:700;font-variant-numeric:normal;font-variant-east-asian:normal;font-variant-alternates:normal;vertical-align:baseline">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</span>
+</div>
+
+<p style="font-size:12pt;font-family:'Times New Roman',serif;color:#222;background-color:transparent;font-weight:bold;margin:0;">Birla Institute of Technology &amp; Science, Pilani</p>
+<p style="font-size:12pt;font-family:'Times New Roman',serif;color:#222;background-color:transparent;margin:0;">Pilani Campus, Rajasthan - 333 031, India</p>
+        `;
+        const range = quill.getSelection(true);
+        if (range) {
+             quill.clipboard.dangerouslyPasteHTML(range.index, signOffHtml);
+        } else {
+             const length = quill.getLength();
+             quill.clipboard.dangerouslyPasteHTML(length, signOffHtml);
+        }
+    }
+
+    function insertBitsBar() {
+        const bitsBarHtml = `
+            <div style="margin:18px 0 10px 0;">
+                <span style="font-size:12pt;font-family:&quot;Times New Roman&quot;,serif;color:rgb(241,194,50);background-color:transparent;font-weight:700;font-variant-numeric:normal;font-variant-east-asian:normal;font-variant-alternates:normal;vertical-align:baseline">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</span><span style="font-size:12pt;font-family:&quot;Times New Roman&quot;,serif;color:rgb(253,175,23);background-color:transparent;font-weight:700;font-variant-numeric:normal;font-variant-east-asian:normal;font-variant-alternates:normal;vertical-align:baseline">▄▄</span><span style="font-size:12pt;font-family:&quot;Times New Roman&quot;,serif;color:rgb(117,195,233);background-color:transparent;font-weight:700;font-variant-numeric:normal;font-variant-east-asian:normal;font-variant-alternates:normal;vertical-align:baseline">▄▄▄▄▄▄▄▄▄▄▄▄<wbr>▄▄▄▄▄▄▄▄</span><span style="font-size:12pt;font-family:&quot;Times New Roman&quot;,serif;color:rgb(237,27,36);background-color:transparent;font-weight:700;font-variant-numeric:normal;font-variant-east-asian:normal;font-variant-alternates:normal;vertical-align:baseline">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</span>
+            </div><br>
+        `;
+        const range = quill.getSelection(true);
+        if (range) {
+             quill.clipboard.dangerouslyPasteHTML(range.index, bitsBarHtml);
+        } else {
+             // If no focus, append to end
+             const length = quill.getLength();
+             quill.clipboard.dangerouslyPasteHTML(length, bitsBarHtml);
+        }
+    }
+
+    function insertCustomPlaceholder() {
+        const name = prompt("Enter placeholder name (without braces):");
+        if (name) {
+            const placeholder = `{${name.trim()}}`;
+            const range = quill.getSelection(true);
+            quill.insertText(range.index, placeholder, 'user');
+            quill.setSelection(range.index + placeholder.length);
+        }
+    }
+
+    // Save Draft functionality
+    document.getElementById('saveBtn').addEventListener('click', function() {
+        const filename = document.getElementById('saveFilename').value;
+        const subject = document.getElementById('draftSubject').value;
+        const body = quill.root.innerHTML;
+
+        if (!filename || !subject || !body) {
+            alert("Please fill in Filename, Subject, and Body.");
+            return;
+        }
+
+        fetch('/save-draft', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                filename: filename,
+                subject: subject,
+                body: body
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('Draft saved successfully!');
+                loadTemplateList(); // Refresh list
+            } else {
+                alert('Error saving draft: ' + data.error);
+            }
+        })
+        .catch(error => alert('Error: ' + error));
+    });
+
+    // Load Draft functionality
+    document.getElementById('loadBtn').addEventListener('click', function() {
+        const filename = document.getElementById('templateSelect').value;
+        if (!filename) {
+            alert("Please select a draft to load.");
+            return;
+        }
+
+        fetch(`/get-draft?filename=${filename}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    document.getElementById('saveFilename').value = filename.replace('.txt', '');
+                    document.getElementById('draftSubject').value = data.subject;
+                    
+                    // Simple heuristic: if it contains HTML tags, treat as HTML
+                    if (/<[a-z][\s\S]*>/i.test(data.body)) {
+                        quill.clipboard.dangerouslyPasteHTML(0, data.body);
+                    } else {
+                        quill.setText(data.body);
+                    }
+                } else {
+                    alert('Error loading draft: ' + data.error);
+                }
+            })
+            .catch(error => alert('Error: ' + error));
+    });
+
+</script>
+{% endblock %}
