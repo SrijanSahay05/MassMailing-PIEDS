@@ -1177,5 +1177,765 @@
       "designation_col": null,
       "company_col": "company"
     }
+  },
+  {
+    "id": 32,
+    "timestamp": "2026-02-04T21:14:46.010944",
+    "campaign_name": "Campaign - template.xlsx",
+    "filename": "template.xlsx",
+    "template_used": "E-Summit_Srijan.txt",
+    "total_emails": 1,
+    "success_count": 1,
+    "error_count": 0,
+    "skipped_count": 0,
+    "results_sample": [
+      {
+        "email": "srijan05sahay@gmail.com",
+        "status": "success",
+        "id": "1_srijan05sahay@gmail.com"
+      }
+    ],
+    "failed_results": [],
+    "column_mapping": {
+      "email_col": "email",
+      "poc_col": "first name",
+      "designation_col": null,
+      "company_col": "company name"
+    }
+  },
+  {
+    "id": 33,
+    "timestamp": "2026-02-04T21:16:56.543201",
+    "campaign_name": "Campaign - template.xlsx",
+    "filename": "template.xlsx",
+    "template_used": "E-Summit_Srijan.txt",
+    "total_emails": 1,
+    "success_count": 1,
+    "error_count": 0,
+    "skipped_count": 0,
+    "results_sample": [
+      {
+        "email": "srijan05sahay@gmail.com",
+        "status": "success",
+        "id": "1_srijan05sahay@gmail.com"
+      }
+    ],
+    "failed_results": [],
+    "column_mapping": {
+      "email_col": "email",
+      "poc_col": "first name",
+      "designation_col": null,
+      "company_col": "company name"
+    }
+  },
+  {
+    "id": 34,
+    "timestamp": "2026-02-05T11:01:47.726449",
+    "campaign_name": "Campaign - template.xlsx",
+    "filename": "template.xlsx",
+    "template_used": "apogeeXe-summit(srijan).txt",
+    "total_emails": 1,
+    "success_count": 1,
+    "error_count": 0,
+    "skipped_count": 0,
+    "results_sample": [
+      {
+        "email": "srijan05sahay@gmail.com",
+        "status": "success",
+        "id": "1_srijan05sahay@gmail.com"
+      }
+    ],
+    "failed_results": [],
+    "column_mapping": {
+      "email_col": "email",
+      "poc_col": "first name",
+      "designation_col": null,
+      "company_col": "company name"
+    }
+  },
+  {
+    "id": 35,
+    "timestamp": "2026-02-05T11:06:48.647960",
+    "campaign_name": "Campaign - template.xlsx",
+    "filename": "template.xlsx",
+    "template_used": "apogeeXe-summit(srijan_srijan).txt",
+    "total_emails": 1,
+    "success_count": 1,
+    "error_count": 0,
+    "skipped_count": 0,
+    "results_sample": [
+      {
+        "email": "srijan05sahay@gmail.com",
+        "status": "success",
+        "id": "1_srijan05sahay@gmail.com"
+      }
+    ],
+    "failed_results": [],
+    "column_mapping": {
+      "email_col": "email",
+      "poc_col": "first name",
+      "designation_col": null,
+      "company_col": "company name"
+    }
+  },
+  {
+    "id": 36,
+    "timestamp": "2026-02-05T11:08:12.774866",
+    "campaign_name": "Campaign - template.xlsx",
+    "filename": "template.xlsx",
+    "template_used": "esummitXapogee_srijansahay.txt",
+    "total_emails": 1,
+    "success_count": 1,
+    "error_count": 0,
+    "skipped_count": 0,
+    "results_sample": [
+      {
+        "email": "srijan05sahay@gmail.com",
+        "status": "success",
+        "id": "1_srijan05sahay@gmail.com"
+      }
+    ],
+    "failed_results": [],
+    "column_mapping": {
+      "email_col": "email",
+      "poc_col": "first name",
+      "designation_col": null,
+      "company_col": "company name"
+    }
+  },
+  {
+    "id": 37,
+    "timestamp": "2026-02-05T11:14:28.438453",
+    "campaign_name": "Campaign - template.xlsx",
+    "filename": "template.xlsx",
+    "template_used": "SrijanEsummit.txt",
+    "total_emails": 1,
+    "success_count": 1,
+    "error_count": 0,
+    "skipped_count": 0,
+    "results_sample": [
+      {
+        "email": "srijan05sahay@gmail.com",
+        "status": "success",
+        "id": "1_srijan05sahay@gmail.com"
+      }
+    ],
+    "failed_results": [],
+    "column_mapping": {
+      "email_col": "email",
+      "poc_col": "first name",
+      "designation_col": null,
+      "company_col": "company name"
+    }
+  },
+  {
+    "id": 38,
+    "timestamp": "2026-02-05T11:17:06.326990",
+    "campaign_name": "Campaign - template.xlsx",
+    "filename": "template.xlsx",
+    "template_used": "SrijanEsummit.txt",
+    "total_emails": 1,
+    "success_count": 1,
+    "error_count": 0,
+    "skipped_count": 0,
+    "results_sample": [
+      {
+        "email": "srijan05sahay@gmail.com",
+        "status": "success",
+        "id": "1_srijan05sahay@gmail.com"
+      }
+    ],
+    "failed_results": [],
+    "column_mapping": {
+      "email_col": "email",
+      "poc_col": "company name",
+      "designation_col": null,
+      "company_col": "company name"
+    }
+  },
+  {
+    "id": 39,
+    "timestamp": "2026-02-05T11:18:07.466896",
+    "campaign_name": "Campaign - template.xlsx",
+    "filename": "template.xlsx",
+    "template_used": "E-Summit_Srijan.txt",
+    "total_emails": 1,
+    "success_count": 1,
+    "error_count": 0,
+    "skipped_count": 0,
+    "results_sample": [
+      {
+        "email": "srijan05sahay@gmail.com",
+        "status": "success",
+        "id": "1_srijan05sahay@gmail.com"
+      }
+    ],
+    "failed_results": [],
+    "column_mapping": {
+      "email_col": "email",
+      "poc_col": "first name",
+      "designation_col": null,
+      "company_col": "company name"
+    }
+  },
+  {
+    "id": 40,
+    "timestamp": "2026-02-05T11:24:03.011008",
+    "campaign_name": "Campaign - template.xlsx",
+    "filename": "template.xlsx",
+    "template_used": "ApogeeXesummit_Srijan.txt",
+    "total_emails": 1,
+    "success_count": 1,
+    "error_count": 0,
+    "skipped_count": 0,
+    "results_sample": [
+      {
+        "email": "srijan05sahay@gmail.com",
+        "status": "success",
+        "id": "1_srijan05sahay@gmail.com"
+      }
+    ],
+    "failed_results": [],
+    "column_mapping": {
+      "email_col": "email",
+      "poc_col": "first name",
+      "designation_col": null,
+      "company_col": "company name"
+    }
+  },
+  {
+    "id": 41,
+    "timestamp": "2026-02-05T11:26:28.618059",
+    "campaign_name": "Campaign - template.xlsx",
+    "filename": "template.xlsx",
+    "template_used": "apogeeXe-summit(tushar.5).txt",
+    "total_emails": 1,
+    "success_count": 1,
+    "error_count": 0,
+    "skipped_count": 0,
+    "results_sample": [
+      {
+        "email": "srijan05sahay@gmail.com",
+        "status": "success",
+        "id": "1_srijan05sahay@gmail.com"
+      }
+    ],
+    "failed_results": [],
+    "column_mapping": {
+      "email_col": "email",
+      "poc_col": "first name",
+      "designation_col": null,
+      "company_col": "company name"
+    }
+  },
+  {
+    "id": 42,
+    "timestamp": "2026-02-05T11:27:28.673474",
+    "campaign_name": "Campaign - template.xlsx",
+    "filename": "template.xlsx",
+    "template_used": "apogeeXe-summit(tushar.5).txt",
+    "total_emails": 1,
+    "success_count": 1,
+    "error_count": 0,
+    "skipped_count": 0,
+    "results_sample": [
+      {
+        "email": "srijan05sahay@gmail.com",
+        "status": "success",
+        "id": "1_srijan05sahay@gmail.com"
+      }
+    ],
+    "failed_results": [],
+    "column_mapping": {
+      "email_col": "email",
+      "poc_col": "first name",
+      "designation_col": null,
+      "company_col": "company name"
+    }
+  },
+  {
+    "id": 43,
+    "timestamp": "2026-02-05T11:28:56.723498",
+    "campaign_name": "Campaign - template.xlsx",
+    "filename": "template.xlsx",
+    "template_used": "ApogeeXesummit_Srijan.txt",
+    "total_emails": 1,
+    "success_count": 1,
+    "error_count": 0,
+    "skipped_count": 0,
+    "results_sample": [
+      {
+        "email": "srijan05sahay@gmail.com",
+        "status": "success",
+        "id": "1_srijan05sahay@gmail.com"
+      }
+    ],
+    "failed_results": [],
+    "column_mapping": {
+      "email_col": "email",
+      "poc_col": "first name",
+      "designation_col": null,
+      "company_col": "company name"
+    }
+  },
+  {
+    "id": 44,
+    "timestamp": "2026-02-05T11:33:59.408651",
+    "campaign_name": "Campaign - template.xlsx",
+    "filename": "template.xlsx",
+    "template_used": "ApogeeXesummit_Srijan.txt",
+    "total_emails": 1,
+    "success_count": 1,
+    "error_count": 0,
+    "skipped_count": 0,
+    "results_sample": [
+      {
+        "email": "srijan05sahay@gmail.com",
+        "status": "success",
+        "id": "1_srijan05sahay@gmail.com"
+      }
+    ],
+    "failed_results": [],
+    "column_mapping": {
+      "email_col": "email",
+      "poc_col": "first name",
+      "designation_col": null,
+      "company_col": "company name"
+    }
+  },
+  {
+    "id": 45,
+    "timestamp": "2026-02-05T12:09:56.690910",
+    "campaign_name": "Campaign - corporate_srijan_05062026.xlsx",
+    "filename": "corporate_srijan_05062026.xlsx",
+    "template_used": "ApogeeXesummit_Srijan.txt",
+    "total_emails": 1501,
+    "success_count": 1501,
+    "error_count": 0,
+    "skipped_count": 0,
+    "results_sample": [
+      {
+        "email": "sudhir.pawar@schaeffler.com",
+        "status": "success",
+        "id": "1_sudhir.pawar@schaeffler.com"
+      },
+      {
+        "email": "akshay.saxena@schindler.com",
+        "status": "success",
+        "id": "2_akshay.saxena@schindler.com"
+      },
+      {
+        "email": "anirban.kundu@schindler.com",
+        "status": "success",
+        "id": "3_anirban.kundu@schindler.com"
+      },
+      {
+        "email": "anjali.jaiswal@schindler.com",
+        "status": "success",
+        "id": "4_anjali.jaiswal@schindler.com"
+      },
+      {
+        "email": "ashutosh.singh3@schindler.com",
+        "status": "success",
+        "id": "5_ashutosh.singh3@schindler.com"
+      },
+      {
+        "email": "gaurav.sen@schindler.com",
+        "status": "success",
+        "id": "6_gaurav.sen@schindler.com"
+      },
+      {
+        "email": "hyadav@india.schindler.com",
+        "status": "success",
+        "id": "7_hyadav@india.schindler.com"
+      },
+      {
+        "email": "kumar.ranjan@schindler.com",
+        "status": "success",
+        "id": "8_kumar.ranjan@schindler.com"
+      },
+      {
+        "email": "pranshu.singh@schindler.com",
+        "status": "success",
+        "id": "9_pranshu.singh@schindler.com"
+      },
+      {
+        "email": "prateek.surana@schindler.com",
+        "status": "success",
+        "id": "10_prateek.surana@schindler.com"
+      }
+    ],
+    "failed_results": [],
+    "column_mapping": {
+      "email_col": "email address",
+      "poc_col": "poc name",
+      "designation_col": null,
+      "company_col": "company"
+    }
+  },
+  {
+    "id": 46,
+    "timestamp": "2026-02-05T12:16:36.578822",
+    "campaign_name": "Campaign - template.xlsx",
+    "filename": "template.xlsx",
+    "template_used": "ApogeeXesummit_Krrish.txt",
+    "total_emails": 1,
+    "success_count": 1,
+    "error_count": 0,
+    "skipped_count": 0,
+    "results_sample": [
+      {
+        "email": "srijan05sahay@gmail.com",
+        "status": "success",
+        "id": "1_srijan05sahay@gmail.com"
+      }
+    ],
+    "failed_results": [],
+    "column_mapping": {
+      "email_col": "email",
+      "poc_col": "first name",
+      "designation_col": null,
+      "company_col": "company name"
+    }
+  },
+  {
+    "id": 47,
+    "timestamp": "2026-02-05T12:51:28.381085",
+    "campaign_name": "Campaign - corporate_krrish_05062026.xlsx",
+    "filename": "corporate_krrish_05062026.xlsx",
+    "template_used": "ApogeeXesummit_Krrish.txt",
+    "total_emails": 1501,
+    "success_count": 1501,
+    "error_count": 0,
+    "skipped_count": 0,
+    "results_sample": [
+      {
+        "email": "madhusudan.gs@premierenergies.com",
+        "status": "success",
+        "id": "1_madhusudan.gs@premierenergies.com"
+      },
+      {
+        "email": "rakesh@o2power.in",
+        "status": "success",
+        "id": "2_rakesh@o2power.in"
+      },
+      {
+        "email": "deepak.consul@gentari.com",
+        "status": "success",
+        "id": "3_deepak.consul@gentari.com"
+      },
+      {
+        "email": "nikhil.garg@brookfieldrenewable.com",
+        "status": "success",
+        "id": "4_nikhil.garg@brookfieldrenewable.com"
+      },
+      {
+        "email": "dinesh.more@insolare.com",
+        "status": "success",
+        "id": "5_dinesh.more@insolare.com"
+      },
+      {
+        "email": "rear.admiral@rekise.com",
+        "status": "success",
+        "id": "6_rear.admiral@rekise.com"
+      },
+      {
+        "email": "bkumar@nextracker.com",
+        "status": "success",
+        "id": "7_bkumar@nextracker.com"
+      },
+      {
+        "email": "sanjeev.bhatia@blupineenergy.com",
+        "status": "success",
+        "id": "8_sanjeev.bhatia@blupineenergy.com"
+      },
+      {
+        "email": "ashish.r@solex.in",
+        "status": "success",
+        "id": "9_ashish.r@solex.in"
+      },
+      {
+        "email": "manish.shah@clnenergy.in",
+        "status": "success",
+        "id": "10_manish.shah@clnenergy.in"
+      }
+    ],
+    "failed_results": [],
+    "column_mapping": {
+      "email_col": "email address",
+      "poc_col": "poc name",
+      "designation_col": null,
+      "company_col": "company"
+    }
+  },
+  {
+    "id": 48,
+    "timestamp": "2026-02-23T22:35:28.588409",
+    "campaign_name": "Campaign - template.xlsx",
+    "filename": "template.xlsx",
+    "template_used": "eSummitAnnouncement.txt",
+    "total_emails": 1,
+    "success_count": 1,
+    "error_count": 0,
+    "skipped_count": 0,
+    "results_sample": [
+      {
+        "email": "srijan05sahay@gmail.com",
+        "status": "success",
+        "id": "1_srijan05sahay@gmail.com"
+      }
+    ],
+    "failed_results": [],
+    "column_mapping": {
+      "email_col": "email",
+      "poc_col": "company name",
+      "designation_col": null,
+      "company_col": "company name"
+    }
+  },
+  {
+    "id": 49,
+    "timestamp": "2026-03-05T00:20:16.942657",
+    "campaign_name": "Campaign - priv_Test.xlsx",
+    "filename": "priv_Test.xlsx",
+    "template_used": "apogeeXe-summit(srijan).txt",
+    "total_emails": 1,
+    "success_count": 1,
+    "error_count": 0,
+    "skipped_count": 0,
+    "results_sample": [
+      {
+        "email": "f20240829@pilani.bits-pilani.ac.in",
+        "status": "success",
+        "id": "1_f20240829@pilani.bits-pilani.ac.in"
+      }
+    ],
+    "failed_results": [],
+    "column_mapping": {
+      "email_col": "email",
+      "poc_col": "company name",
+      "designation_col": null,
+      "company_col": "company name"
+    }
+  },
+  {
+    "id": 50,
+    "timestamp": "2026-03-05T00:21:45.921334",
+    "campaign_name": "Campaign - priv_Test.xlsx",
+    "filename": "priv_Test.xlsx",
+    "template_used": "ApogeeXesummit_Srijan.txt",
+    "total_emails": 1,
+    "success_count": 1,
+    "error_count": 0,
+    "skipped_count": 0,
+    "results_sample": [
+      {
+        "email": "f20240829@pilani.bits-pilani.ac.in",
+        "status": "success",
+        "id": "1_f20240829@pilani.bits-pilani.ac.in"
+      }
+    ],
+    "failed_results": [],
+    "column_mapping": {
+      "email_col": "email",
+      "poc_col": "company name",
+      "designation_col": null,
+      "company_col": "company name"
+    }
+  },
+  {
+    "id": 51,
+    "timestamp": "2026-03-05T11:17:12.713836",
+    "campaign_name": "Campaign - priv_Test.xlsx",
+    "filename": "priv_Test.xlsx",
+    "template_used": "ApogeeXesummit_Srijan.txt",
+    "total_emails": 1,
+    "success_count": 1,
+    "error_count": 0,
+    "skipped_count": 0,
+    "results_sample": [
+      {
+        "email": "f20240829@pilani.bits-pilani.ac.in",
+        "status": "success",
+        "id": "1_f20240829@pilani.bits-pilani.ac.in"
+      }
+    ],
+    "failed_results": [],
+    "column_mapping": {
+      "email_col": "email",
+      "poc_col": "first name",
+      "designation_col": null,
+      "company_col": "company name"
+    }
+  },
+  {
+    "id": 52,
+    "timestamp": "2026-03-05T11:57:17.533157",
+    "campaign_name": "Campaign - corporate_esummitxapogee_05032026.xlsx",
+    "filename": "corporate_esummitxapogee_05032026.xlsx",
+    "template_used": "ApogeeXesummit_Srijan.txt",
+    "total_emails": 1860,
+    "success_count": 1854,
+    "error_count": 0,
+    "skipped_count": 6,
+    "results_sample": [
+      {
+        "email": "dhanashreed@goodlifeconsumer.com",
+        "status": "success",
+        "id": "1_dhanashreed@goodlifeconsumer.com"
+      },
+      {
+        "email": "hitesh.chawla@goodluckindia.com",
+        "status": "success",
+        "id": "2_hitesh.chawla@goodluckindia.com"
+      },
+      {
+        "email": "ranjan.pathak@goodluckindia.com",
+        "status": "success",
+        "id": "3_ranjan.pathak@goodluckindia.com"
+      },
+      {
+        "email": "lsaranya@eriez.com",
+        "status": "success",
+        "id": "4_lsaranya@eriez.com"
+      },
+      {
+        "email": "peter@goodtech.no",
+        "status": "success",
+        "id": "5_peter@goodtech.no"
+      },
+      {
+        "email": "anita@grautomation.in",
+        "status": "success",
+        "id": "6_anita@grautomation.in"
+      },
+      {
+        "email": "ashwini@gramtonweighing.com",
+        "status": "success",
+        "id": "7_ashwini@gramtonweighing.com"
+      },
+      {
+        "email": "swati.jyani@greenvibes.in",
+        "status": "success",
+        "id": "8_swati.jyani@greenvibes.in"
+      },
+      {
+        "email": "chhavi.oli@groz-tools.com",
+        "status": "success",
+        "id": "9_chhavi.oli@groz-tools.com"
+      },
+      {
+        "email": "sakshi.bammi@groz-tools.com",
+        "status": "success",
+        "id": "10_sakshi.bammi@groz-tools.com"
+      }
+    ],
+    "failed_results": [],
+    "column_mapping": {
+      "email_col": "email",
+      "poc_col": "name",
+      "designation_col": null,
+      "company_col": "company name"
+    }
+  },
+  {
+    "id": 53,
+    "timestamp": "2026-03-16T15:52:00.874690",
+    "campaign_name": "Campaign - priv_Test.xlsx",
+    "filename": "priv_Test.xlsx",
+    "template_used": "dummy.txt",
+    "total_emails": 1,
+    "success_count": 1,
+    "error_count": 0,
+    "skipped_count": 0,
+    "results_sample": [
+      {
+        "email": "f20240829@pilani.bits-pilani.ac.in",
+        "status": "success",
+        "id": "1_f20240829@pilani.bits-pilani.ac.in"
+      }
+    ],
+    "failed_results": [],
+    "column_mapping": {
+      "email_col": "email",
+      "poc_col": "first name",
+      "designation_col": null,
+      "company_col": "company name"
+    }
+  },
+  {
+    "id": 54,
+    "timestamp": "2026-03-17T12:20:00.620016",
+    "campaign_name": "Campaign - priv_Test.xlsx",
+    "filename": "priv_Test.xlsx",
+    "template_used": "ApogeeXesummit_Srijan.txt",
+    "total_emails": 1,
+    "success_count": 1,
+    "error_count": 0,
+    "skipped_count": 0,
+    "results_sample": [
+      {
+        "email": "f20240829@pilani.bits-pilani.ac.in",
+        "status": "success",
+        "id": "1_f20240829@pilani.bits-pilani.ac.in"
+      }
+    ],
+    "failed_results": [],
+    "column_mapping": {
+      "email_col": "email",
+      "poc_col": "first name",
+      "designation_col": null,
+      "company_col": "company name"
+    }
+  },
+  {
+    "id": 55,
+    "timestamp": "2026-03-31T21:29:32.918853",
+    "campaign_name": "Campaign - priv_Test.xlsx",
+    "filename": "priv_Test.xlsx",
+    "template_used": "dropshipping_test.txt",
+    "total_emails": 1,
+    "success_count": 1,
+    "error_count": 0,
+    "skipped_count": 0,
+    "results_sample": [
+      {
+        "email": "f20240829@pilani.bits-pilani.ac.in",
+        "status": "success",
+        "id": "1_f20240829@pilani.bits-pilani.ac.in"
+      }
+    ],
+    "failed_results": [],
+    "column_mapping": {
+      "email_col": "email",
+      "poc_col": "first name",
+      "designation_col": null,
+      "company_col": "company name"
+    }
+  },
+  {
+    "id": 56,
+    "timestamp": "2026-03-31T21:36:52.042240",
+    "campaign_name": "Campaign - priv_Test.xlsx",
+    "filename": "priv_Test.xlsx",
+    "template_used": "dropshipping_mail1.txt",
+    "total_emails": 1,
+    "success_count": 1,
+    "error_count": 0,
+    "skipped_count": 0,
+    "results_sample": [
+      {
+        "email": "f20240829@pilani.bits-pilani.ac.in",
+        "status": "success",
+        "id": "1_f20240829@pilani.bits-pilani.ac.in"
+      }
+    ],
+    "failed_results": [],
+    "column_mapping": {
+      "email_col": "email",
+      "poc_col": "first name",
+      "designation_col": null,
+      "company_col": "company name"
+    }
   }
 ]

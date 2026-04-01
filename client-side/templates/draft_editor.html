@@ -123,8 +123,17 @@
         <div class="card shadow-sm border-0">
             <div class="card-body p-0">
                 <!-- Subject Line (Email Client Style) -->
-                <div class="p-3 border-bottom">
-                    <input type="text" class="form-control border-0 fw-bold fs-5" id="draftSubject" placeholder="Subject">
+                <div class="border-bottom">
+                    <div class="p-3 pb-2">
+                        <input type="text" class="form-control border-0 fw-bold fs-5" id="draftSubject" placeholder="Subject">
+                    </div>
+                    <div class="px-3 pb-2 d-flex align-items-center gap-1 flex-wrap">
+                        <small class="text-muted me-1">Insert:</small>
+                        <button type="button" class="btn btn-outline-secondary btn-sm subject-placeholder-btn" data-placeholder="{poc_name}">POC Name</button>
+                        <button type="button" class="btn btn-outline-secondary btn-sm subject-placeholder-btn" data-placeholder="{company}">Company</button>
+                        <button type="button" class="btn btn-outline-secondary btn-sm subject-placeholder-btn" data-placeholder="{designation}">Designation</button>
+                        <button type="button" class="btn btn-outline-info btn-sm" onclick="insertSubjectPlaceholder()">Custom...</button>
+                    </div>
                 </div>
                 
                 <div class=""> <!-- Wrapper for sticky toolbar -->
@@ -286,7 +295,7 @@
     // Initial Load
     loadTemplateList();
 
-    // Insert Placeholder Logic
+    // Insert Placeholder Logic (body)
     document.querySelectorAll('.placeholder-btn').forEach(btn => {
         btn.addEventListener('click', function(e) {
             if (this.hasAttribute('data-placeholder')) {
@@ -297,6 +306,31 @@
             }
         });
     });
+
+    // Insert Placeholder Logic (subject)
+    document.querySelectorAll('.subject-placeholder-btn').forEach(btn => {
+        btn.addEventListener('click', function () {
+            const placeholder = this.getAttribute('data-placeholder');
+            const input = document.getElementById('draftSubject');
+            const start = input.selectionStart;
+            const end = input.selectionEnd;
+            input.value = input.value.slice(0, start) + placeholder + input.value.slice(end);
+            input.selectionStart = input.selectionEnd = start + placeholder.length;
+            input.focus();
+        });
+    });
+
+    function insertSubjectPlaceholder() {
+        const name = prompt('Enter placeholder name (e.g. poc_name):');
+        if (!name || !name.trim()) return;
+        const placeholder = `{${name.trim()}}`;
+        const input = document.getElementById('draftSubject');
+        const start = input.selectionStart;
+        const end = input.selectionEnd;
+        input.value = input.value.slice(0, start) + placeholder + input.value.slice(end);
+        input.selectionStart = input.selectionEnd = start + placeholder.length;
+        input.focus();
+    }
     
     function insertSignOff() {
         const signOffHtml = `
